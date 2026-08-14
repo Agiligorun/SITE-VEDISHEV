@@ -4,6 +4,14 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 
 import type { Post } from '../../../payload-types'
 
+const safelyRevalidate = (callback: () => void, onSkip: () => void) => {
+  try {
+    callback()
+  } catch {
+    onSkip()
+  }
+}
+
 export const revalidatePost: CollectionAfterChangeHook<Post> = ({
   doc,
   previousDoc,
@@ -15,8 +23,10 @@ export const revalidatePost: CollectionAfterChangeHook<Post> = ({
 
       payload.logger.info(`Revalidating post at path: ${path}`)
 
-      revalidatePath(path)
-      revalidateTag('posts-sitemap', 'max')
+      safelyRevalidate(() => {
+        revalidatePath(path)
+        revalidateTag('posts-sitemap', 'max')
+      }, () => payload.logger.warn('Skipping post revalidation outside Next.js request context'))
     }
 
     // If the post was previously published, we need to revalidate the old path
@@ -25,8 +35,10 @@ export const revalidatePost: CollectionAfterChangeHook<Post> = ({
 
       payload.logger.info(`Revalidating old post at path: ${oldPath}`)
 
-      revalidatePath(oldPath)
-      revalidateTag('posts-sitemap', 'max')
+      safelyRevalidate(() => {
+        revalidatePath(oldPath)
+        revalidateTag('posts-sitemap', 'max')
+      }, () => payload.logger.warn('Skipping old post revalidation outside Next.js request context'))
     }
   }
   return doc
@@ -36,8 +48,10 @@ export const revalidateDelete: CollectionAfterDeleteHook<Post> = ({ doc, req: { 
   if (!context.disableRevalidate) {
     const path = `/posts/${doc?.slug}`
 
-    revalidatePath(path)
-    revalidateTag('posts-sitemap', 'max')
+    safelyRevalidate(() => {
+      revalidatePath(path)
+      revalidateTag('posts-sitemap', 'max')
+    }, () => {})
   }
 
   return doc

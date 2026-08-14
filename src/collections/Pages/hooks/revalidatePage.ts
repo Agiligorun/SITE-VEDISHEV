@@ -4,6 +4,14 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 
 import type { Page } from '../../../payload-types'
 
+const safelyRevalidate = (callback: () => void, onSkip: () => void) => {
+  try {
+    callback()
+  } catch {
+    onSkip()
+  }
+}
+
 export const revalidatePage: CollectionAfterChangeHook<Page> = ({
   doc,
   previousDoc,
@@ -15,8 +23,10 @@ export const revalidatePage: CollectionAfterChangeHook<Page> = ({
 
       payload.logger.info(`Revalidating page at path: ${path}`)
 
-      revalidatePath(path)
-      revalidateTag('pages-sitemap', 'max')
+      safelyRevalidate(() => {
+        revalidatePath(path)
+        revalidateTag('pages-sitemap', 'max')
+      }, () => payload.logger.warn('Skipping page revalidation outside Next.js request context'))
     }
 
     // If the page was previously published, we need to revalidate the old path
@@ -25,8 +35,10 @@ export const revalidatePage: CollectionAfterChangeHook<Page> = ({
 
       payload.logger.info(`Revalidating old page at path: ${oldPath}`)
 
-      revalidatePath(oldPath)
-      revalidateTag('pages-sitemap', 'max')
+      safelyRevalidate(() => {
+        revalidatePath(oldPath)
+        revalidateTag('pages-sitemap', 'max')
+      }, () => payload.logger.warn('Skipping old page revalidation outside Next.js request context'))
     }
   }
   return doc
@@ -35,8 +47,10 @@ export const revalidatePage: CollectionAfterChangeHook<Page> = ({
 export const revalidateDelete: CollectionAfterDeleteHook<Page> = ({ doc, req: { context } }) => {
   if (!context.disableRevalidate) {
     const path = doc?.slug === 'home' ? '/' : `/${doc?.slug}`
-    revalidatePath(path)
-    revalidateTag('pages-sitemap', 'max')
+    safelyRevalidate(() => {
+      revalidatePath(path)
+      revalidateTag('pages-sitemap', 'max')
+    }, () => {})
   }
 
   return doc
