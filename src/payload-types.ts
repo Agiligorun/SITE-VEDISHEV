@@ -845,7 +845,7 @@ export interface Testimonial {
   text: string;
   publishedAt?: string | null;
   source?: string | null;
-  status?: ('pending' | 'approved' | 'rejected') | null;
+  reviewStatus?: ('pending' | 'approved' | 'rejected') | null;
   showOnHome?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -1706,7 +1706,7 @@ export interface TestimonialsSelect<T extends boolean = true> {
   text?: T;
   publishedAt?: T;
   source?: T;
-  status?: T;
+  reviewStatus?: T;
   showOnHome?: T;
   updatedAt?: T;
   createdAt?: T;

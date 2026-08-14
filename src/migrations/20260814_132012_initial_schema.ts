@@ -30,7 +30,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum__publications_v_version_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum_books_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum__books_v_version_status" AS ENUM('draft', 'published');
+  CREATE TYPE "public"."enum_testimonials_review_status" AS ENUM('pending', 'approved', 'rejected');
   CREATE TYPE "public"."enum_testimonials_status" AS ENUM('draft', 'published');
+  CREATE TYPE "public"."enum__testimonials_v_version_review_status" AS ENUM('pending', 'approved', 'rejected');
   CREATE TYPE "public"."enum__testimonials_v_version_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum_videos_provider" AS ENUM('youtube', 'vk', 'rutube', 'other');
   CREATE TYPE "public"."enum_videos_status" AS ENUM('draft', 'published');
@@ -682,7 +684,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"text" varchar,
   	"published_at" timestamp(3) with time zone,
   	"source" varchar,
-  	"status" "enum_testimonials_status" DEFAULT 'pending',
+  	"review_status" "enum_testimonials_review_status" DEFAULT 'pending',
   	"show_on_home" boolean,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -696,7 +698,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"version_text" varchar,
   	"version_published_at" timestamp(3) with time zone,
   	"version_source" varchar,
-  	"version_status" "enum__testimonials_v_version_status" DEFAULT 'pending',
+  	"version_review_status" "enum__testimonials_v_version_review_status" DEFAULT 'pending',
   	"version_show_on_home" boolean,
   	"version_updated_at" timestamp(3) with time zone,
   	"version_created_at" timestamp(3) with time zone,
@@ -1923,7 +1925,9 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum__publications_v_version_status";
   DROP TYPE "public"."enum_books_status";
   DROP TYPE "public"."enum__books_v_version_status";
+  DROP TYPE "public"."enum_testimonials_review_status";
   DROP TYPE "public"."enum_testimonials_status";
+  DROP TYPE "public"."enum__testimonials_v_version_review_status";
   DROP TYPE "public"."enum__testimonials_v_version_status";
   DROP TYPE "public"."enum_videos_provider";
   DROP TYPE "public"."enum_videos_status";

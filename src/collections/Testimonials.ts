@@ -50,7 +50,7 @@ export const Testimonials: CollectionConfig = {
       type: 'row',
       fields: [
         {
-          name: 'status',
+          name: 'reviewStatus',
           type: 'select',
           label: 'Статус',
           defaultValue: 'pending',

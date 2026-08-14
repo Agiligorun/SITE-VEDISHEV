@@ -7926,9 +7926,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "status": {
-          "name": "status",
-          "type": "enum_testimonials_status",
+        "review_status": {
+          "name": "review_status",
+          "type": "enum_testimonials_review_status",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
@@ -8057,9 +8057,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "version_status": {
-          "name": "version_status",
-          "type": "enum__testimonials_v_version_status",
+        "version_review_status": {
+          "name": "version_review_status",
+          "type": "enum__testimonials_v_version_review_status",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
@@ -15117,12 +15117,30 @@
         "published"
       ]
     },
+    "public.enum_testimonials_review_status": {
+      "name": "enum_testimonials_review_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "approved",
+        "rejected"
+      ]
+    },
     "public.enum_testimonials_status": {
       "name": "enum_testimonials_status",
       "schema": "public",
       "values": [
         "draft",
         "published"
+      ]
+    },
+    "public.enum__testimonials_v_version_review_status": {
+      "name": "enum__testimonials_v_version_review_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "approved",
+        "rejected"
       ]
     },
     "public.enum__testimonials_v_version_status": {
@@ -15276,6 +15294,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "68f5bb60-2c0b-455c-8edf-adcd9996348a",
+  "id": "705bffd3-2f06-4389-9253-2b28cb1e52e1",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }
