@@ -1,0 +1,18 @@
+[Unit]
+Description=vedishev.ru Payload CMS and Next.js
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=vedishev
+Group=vedishev
+WorkingDirectory=/var/www/vedishev/current
+Environment=NODE_ENV=production
+EnvironmentFile=/var/www/vedishev/shared/.env
+ExecStart=/usr/bin/env pnpm start -- --hostname 127.0.0.1 --port 3000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
