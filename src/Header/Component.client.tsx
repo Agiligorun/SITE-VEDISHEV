@@ -2,6 +2,7 @@
 
 import { useHeaderTheme } from '@/providers/HeaderTheme'
 import { cn } from '@/utilities/ui'
+import { MapPin, Phone } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -36,67 +37,60 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, siteSettings }
 
   return (
     <header
-      className="relative z-20 border-b border-border/80 bg-white/95 backdrop-blur-sm"
+      className="relative z-20 border-b border-border bg-white"
       {...(theme ? { 'data-theme': theme } : {})}
     >
       <div className="container">
-        <div className="grid gap-6 py-6 lg:grid-cols-[minmax(16rem,1fr)_minmax(0,1.2fr)_auto] lg:items-center">
+        <div className="grid gap-4 py-4 lg:grid-cols-[minmax(14rem,1.1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-center">
           <Link href="/">
             <Logo className="max-w-max" />
           </Link>
 
-          <div className="grid gap-3 text-sm text-muted-foreground md:grid-cols-3">
+          <div className="hidden text-[0.92rem] leading-6 text-primary lg:block">
+            <p className="font-semibold text-primary">{siteSettings?.fullName || 'Николай Павлович Ведищев'}</p>
+            <p className="text-muted-foreground">{siteSettings?.professionalStatus || 'Адвокат'}</p>
+          </div>
+
+          <div className="hidden items-start gap-3 text-[0.9rem] leading-6 text-primary lg:flex">
+            <MapPin className="mt-1 size-4 shrink-0 stroke-[1.7] text-accent" />
             <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-accent">
-                Персональная практика
-              </p>
-              <p className="mt-2 font-semibold text-primary">
-                {siteSettings?.fullName || 'Николай Павлович Ведищев'}
-              </p>
-              <p>{siteSettings?.professionalStatus || 'Адвокат'}</p>
+              <p>{siteSettings?.address || 'Адрес будет подтвержден и заполнен через CMS'}</p>
+              <p className="text-muted-foreground">{siteSettings?.workingHours || 'По предварительной записи'}</p>
             </div>
+          </div>
+
+          <div className="hidden items-start gap-3 text-[0.9rem] leading-6 text-primary lg:flex">
+            <Phone className="mt-1 size-4 shrink-0 stroke-[1.7] text-accent" />
             <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-accent">
-                Адрес
-              </p>
-              <p className="mt-2">{siteSettings?.address || 'Адрес будет заполнен через CMS'}</p>
-              <p>{siteSettings?.workingHours || 'По предварительной записи'}</p>
-            </div>
-            <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-accent">
-                Контакты
-              </p>
-              <p className="mt-2">{siteSettings?.phone || '+7 (000) 000-00-00'}</p>
-              <p>{siteSettings?.email || 'email@example.com'}</p>
+              <p>{siteSettings?.phone || '+7 (000) 000-00-00'}</p>
+              <p className="text-muted-foreground">{siteSettings?.email || 'email@example.com'}</p>
             </div>
           </div>
 
           <div className="flex justify-start lg:justify-end">
             {siteSettings?.primaryCTA?.link ? (
-              <CMSLink {...siteSettings.primaryCTA.link} className="gold-button" />
+              <CMSLink {...siteSettings.primaryCTA.link} className="gold-button inline-flex min-w-[15rem] justify-center" />
             ) : (
-              <a className="gold-button" href="#consultation">
+              <a className="gold-button inline-flex min-w-[15rem] justify-center" href="#consultation">
                 Записаться на консультацию
               </a>
             )}
           </div>
         </div>
 
-        <div className="border-t border-border/80 py-4">
+        <div className="border-t border-border py-3">
           <div className="flex items-center justify-between lg:hidden">
-            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-accent">
-              Навигация
-            </p>
+            <p className="text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-accent">Навигация</p>
             <button
               aria-expanded={isMenuOpen}
-              className="rounded-full border border-primary/12 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary"
+              className="border border-border px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary"
               onClick={() => setIsMenuOpen((current) => !current)}
               type="button"
             >
               {isMenuOpen ? 'Закрыть' : 'Меню'}
             </button>
           </div>
-          <div className={cn('mt-4 lg:mt-0', isMenuOpen ? 'block' : 'hidden lg:block')}>
+          <div className={cn('mt-3 lg:mt-0', isMenuOpen ? 'block' : 'hidden lg:block')}>
             <HeaderNav data={data} />
           </div>
         </div>

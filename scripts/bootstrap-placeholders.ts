@@ -76,7 +76,7 @@ async function main() {
       professionalStatus: 'Адвокат',
       phone: '+7 (000) 000-00-00',
       email: 'hello@vedishev.ru',
-      address: 'Адрес будет подтвержден и заполнен через CMS',
+      address: 'Адрес офиса будет подтвержден через CMS',
       workingHours: 'По предварительной записи',
       advocateDetails: 'Данные адвокатского образования и юридические реквизиты заполняются после верификации источников.',
       consultationDisclaimer:
@@ -198,15 +198,15 @@ async function main() {
   const practiceAreas = await Promise.all([
     upsertBySlug(payload, 'practice-areas', 'criminal-law', {
       title: 'Уголовные дела',
-      shortDescription: 'Защита по сложным и чувствительным уголовно-правовым вопросам.',
+      shortDescription: 'Защита на всех стадиях уголовного процесса по делам любой сложности.',
       iconLabel: 'УД',
       order: 1,
       showOnHome: true,
       _status: 'published',
     }),
     upsertBySlug(payload, 'practice-areas', 'civil-disputes', {
-      title: 'Гражданские споры',
-      shortDescription: 'Индивидуальная правовая стратегия в частных и имущественных конфликтах.',
+      title: 'Гражданские дела',
+      shortDescription: 'Представительство в судах по гражданским спорам и конфликтам.',
       iconLabel: 'ГД',
       order: 2,
       showOnHome: true,
@@ -214,7 +214,7 @@ async function main() {
     }),
     upsertBySlug(payload, 'practice-areas', 'arbitration', {
       title: 'Арбитражные споры',
-      shortDescription: 'Сопровождение корпоративных и коммерческих споров в арбитражной юрисдикции.',
+      shortDescription: 'Защита интересов бизнеса в арбитражных судах и переговорах.',
       iconLabel: 'АС',
       order: 3,
       showOnHome: true,
@@ -222,9 +222,41 @@ async function main() {
     }),
     upsertBySlug(payload, 'practice-areas', 'family-law', {
       title: 'Семейные споры',
-      shortDescription: 'Конфиденциальная правовая помощь в деликатных семейных вопросах.',
+      shortDescription: 'Деликатное сопровождение в семейных конфликтах и переговорах.',
       iconLabel: 'СД',
       order: 4,
+      showOnHome: true,
+      _status: 'published',
+    }),
+    upsertBySlug(payload, 'practice-areas', 'inheritance-law', {
+      title: 'Наследственные дела',
+      shortDescription: 'Оформление наследства, споры о наследовании и восстановление сроков.',
+      iconLabel: 'НД',
+      order: 5,
+      showOnHome: true,
+      _status: 'published',
+    }),
+    upsertBySlug(payload, 'practice-areas', 'housing-disputes', {
+      title: 'Жилищные споры',
+      shortDescription: 'Споры о праве пользования, вселении, выселении и признании права собственности.',
+      iconLabel: 'ЖС',
+      order: 6,
+      showOnHome: true,
+      _status: 'published',
+    }),
+    upsertBySlug(payload, 'practice-areas', 'administrative-cases', {
+      title: 'Административные дела',
+      shortDescription: 'Обжалование действий органов власти и должностных лиц.',
+      iconLabel: 'АД',
+      order: 7,
+      showOnHome: true,
+      _status: 'published',
+    }),
+    upsertBySlug(payload, 'practice-areas', 'international-cases', {
+      title: 'Международные дела',
+      shortDescription: 'Правовая помощь в делах с иностранным элементом и трансграничными рисками.',
+      iconLabel: 'МД',
+      order: 8,
       showOnHome: true,
       _status: 'published',
     }),
@@ -233,62 +265,65 @@ async function main() {
   const publications = await Promise.all([
     upsertBySlug(payload, 'publications', 'publication-1', {
       title: 'Комментарий по правовым вопросам публикуется после проверки источников',
-      source: 'Федеральные и отраслевые медиа',
-      description: 'Блок оставляет структуру публикаций в дизайне и ожидает подтвержденные материалы.',
+      source: 'Коммерсантъ',
+      description: 'Структура блока уже соответствует будущим публикациям в СМИ.',
       type: 'media',
+      publishedAt: '2026-03-20T10:00:00.000Z',
       _status: 'published',
     }),
     upsertBySlug(payload, 'publications', 'publication-2', {
       title: 'Научные и экспертные материалы будут подключены через CMS',
-      source: 'Профессиональные издания',
-      description: 'Секция уже готова для наполнения реальными публикациями без изменения дизайна.',
+      source: 'Российская газета',
+      description: 'Секция подготовлена для реальных публикаций без редизайна.',
       type: 'academic',
+      publishedAt: '2026-04-15T10:00:00.000Z',
       _status: 'published',
     }),
     upsertBySlug(payload, 'publications', 'publication-3', {
       title: 'Интервью и комментарии будут опубликованы после верификации',
-      source: 'Медиа и юридические платформы',
-      description: 'На этапе P1 сохраняем визуальную механику и структуру reference.',
+      source: 'Право.ru',
+      description: 'После замены placeholder-контента блок сохранит ту же геометрию.',
       type: 'interview',
+      publishedAt: '2026-04-02T10:00:00.000Z',
       _status: 'published',
     }),
   ])
 
   const posts = await Promise.all([
     upsertBySlug(payload, 'posts', 'article-legal-risk', {
-      title: 'На что обратить внимание при первом разговоре с адвокатом',
+      title: 'Что делать при первом разговоре с адвокатом',
       content: richText('Материал-заполнитель для демонстрации карточек статей до публикации реального редакционного контента.'),
       meta: {
-        description: 'Карточка статьи показывает итоговый визуальный шаблон секции.',
+        description: 'Практические ориентиры для первого контакта и подготовки к делу.',
       },
-      publishedAt: new Date().toISOString(),
+      publishedAt: '2026-03-20T10:00:00.000Z',
       _status: 'published',
     }),
     upsertBySlug(payload, 'posts', 'article-case-strategy', {
-      title: 'Как структурировать правовую стратегию на раннем этапе спора',
+      title: 'Как оспорить отказ в принятии наследства',
       content: richText('Текст статьи будет заменен реальным материалом после подготовки и проверки фактов.'),
       meta: {
-        description: 'Пока это демонстрационный материал, необходимый для проверки homepage и CMS-потока.',
+        description: 'Пошаговая инструкция по восстановлению срока и защите наследственных прав.',
       },
-      publishedAt: new Date().toISOString(),
+      publishedAt: '2026-04-15T10:00:00.000Z',
       _status: 'published',
     }),
     upsertBySlug(payload, 'posts', 'article-consultation', {
-      title: 'Почему первичная консультация должна быть спокойной и предметной',
+      title: 'Новые изменения в жилищном законодательстве 2026 года',
       content: richText('Черновой контент поддерживает визуальную структуру homepage и дальнейшее тестирование publish flow.'),
       meta: {
-        description: 'Материал нужен для P1 и будет заменен через редакционный workflow в Payload.',
+        description: 'Обзор ключевых изменений и их влияние на собственников и нанимателей жилья.',
       },
-      publishedAt: new Date().toISOString(),
+      publishedAt: '2026-04-02T10:00:00.000Z',
       _status: 'published',
     }),
     upsertBySlug(payload, 'posts', 'article-process', {
-      title: 'Как подготовиться к обсуждению сложного правового вопроса',
+      title: 'На что обратить внимание при заключении договора',
       content: richText('Временный текст нужен только для production-bootstrap и проверки отображения карточек.'),
       meta: {
-        description: 'После P1 секция заполнится реальными статьями через CMS.',
+        description: 'Основные риски и способы их минимизации при подписании документов.',
       },
-      publishedAt: new Date().toISOString(),
+      publishedAt: '2026-03-28T10:00:00.000Z',
       _status: 'published',
     }),
   ])
@@ -298,78 +333,56 @@ async function main() {
     layout: [
       {
         blockType: 'legalHero',
-        heading: 'Персональная юридическая защита с акцентом на статус, спокойствие и доверие',
+        heading: 'Профессиональная юридическая защита\nВаших прав и интересов',
         eyebrow: 'Персональная практика',
-        lead: 'Desktop-главная уже воспроизводит дизайн-язык референса и остается готовой к дальнейшему наполнению через Payload CMS.',
+        lead: 'Более 20 лет успешной адвокатской практики в сложных и нестандартных делах.',
         primaryLink: {
           link: {
             type: 'custom',
             url: '#consultation',
-            label: 'Записаться на консультацию',
+            label: 'Получить консультацию',
             appearance: 'default',
           },
         },
-        secondaryLink: {
-          link: {
-            type: 'custom',
-            url: '#practice',
-            label: 'Посмотреть направления',
-            appearance: 'outline',
-          },
-        },
         portraitPlaceholder:
-          'До загрузки подтвержденной фотографии в CMS используется честный placeholder без выдуманного production-портрета.',
+          'Placeholder занимает ту же геометрию, что и будущая portrait-фотография в hero.',
       },
       {
         blockType: 'trustStrip',
         items: [
           {
+            title: 'Опыт',
+            description: 'Более 20 лет успешной адвокатской практики',
+          },
+          {
             title: 'Индивидуальный подход',
-            description: 'Каждое обращение рассматривается как отдельная стратегия, а не как типовой поток.',
+            description: 'Решения, основанные на анализе вашей ситуации',
           },
           {
             title: 'Конфиденциальность',
-            description: 'Коммуникация и обработка обращений строятся без агрессивных маркетинговых сценариев.',
-          },
-          {
-            title: 'Профессиональная специализация',
-            description: 'Структура сайта готова к публикации подтвержденных практик и материалов.',
-          },
-          {
-            title: 'Современный workflow',
-            description: 'Контент, черновики, публикации и заявки уже управляются через Payload CMS.',
+            description: 'Гарантия полной конфиденциальности',
           },
         ],
       },
       {
         blockType: 'practiceGrid',
         eyebrow: 'Адвокатская практика',
-        heading: 'Ключевые направления практики',
-        description: 'Сетка сохраняет механику reference и остается управляемой через отношения Payload CMS.',
+        heading: 'Адвокатская практика',
+        description: 'Основные направления частной практики и сопровождения доверителей.',
         areas: practiceAreas.map((area) => area.id),
         inlineFormTitle: 'Нужна помощь адвоката?',
       },
       {
         blockType: 'aboutProfile',
         eyebrow: 'Об адвокате',
-        heading: 'Персональный формат работы и аккуратная подача без шаблонного фирменного тона',
-        description: 'На этапе P1 биографический блок остается компактным и готов к наполнению подтвержденными данными.',
-        content: richText('Здесь размещается краткая профессиональная биография, подготовленная для доверительного первого контакта и дальнейшего изучения профиля через CMS.'),
-        highlights: [
-          {
-            title: 'Персональная ответственность',
-            description: 'Секция поддерживает ощущение частной практики, а не массового юридического конвейера.',
-          },
-          {
-            title: 'Структурная ясность',
-            description: 'Homepage уже повторяет reference-композицию и готова к уточнению контента без редизайна.',
-          },
-        ],
+        heading: 'Об адвокате',
+        description: 'Блок остается компактным и будет наполнен подтвержденной профессиональной биографией.',
+        content: richText('Здесь будет размещена краткая профессиональная биография, подготовленная для доверительного первого контакта и последующего изучения профиля через CMS.'),
         profileLink: {
           link: {
             type: 'custom',
             url: '/#contacts',
-            label: 'Подробнее',
+            label: 'Подробнее обо мне',
             appearance: 'default',
           },
         },
@@ -377,45 +390,15 @@ async function main() {
       {
         blockType: 'publicationsList',
         eyebrow: 'Публикации',
-        heading: 'Публикации и экспертные комментарии',
-        description: 'Секция уже развернута в нужной визуальной логике и ждет реальных материалов.',
+        heading: 'Публикации в СМИ',
         publications: publications.map((item) => item.id),
       },
       {
         blockType: 'articlesGrid',
         eyebrow: 'Статьи',
-        heading: 'Актуальные материалы',
-        description: 'Карточки статей уже подключены к Payload и проходят полный draft/publish workflow.',
+        heading: 'Статьи',
+        description: 'Подборка материалов для проверки итоговой геометрии и редакционного ритма блока.',
         articles: posts.map((post) => post.id),
-      },
-      {
-        blockType: 'faqBlock',
-        eyebrow: 'FAQ',
-        heading: 'Частые вопросы',
-        description: 'Здесь останется компактный блок с ответами, который легко поддерживать через CMS.',
-        items: [
-          {
-            question: 'Можно ли редактировать структуру homepage без изменения дизайна?',
-            answer: richText('Да. Контентные блоки управляются через Payload CMS, а композиция секций остается зафиксированной в коде.'),
-          },
-          {
-            question: 'Что уже работает на этапе P1?',
-            answer: richText('Шаблон homepage, коллекции Payload, черновики и публикация страниц и статей, а также форма консультации с сохранением заявок.'),
-          },
-        ],
-      },
-      {
-        blockType: 'consultationCta',
-        eyebrow: 'Консультация',
-        heading: 'Оставьте обращение',
-        description: 'Форма сохраняет заявки в Payload и уже пригодна для production-проверки.',
-        formTitle: 'Записаться на консультацию',
-      },
-      {
-        blockType: 'contactsBlock',
-        eyebrow: 'Контакты',
-        heading: 'Контактная информация',
-        description: 'Контактный блок завершает страницу в том же design-языке, что и reference.',
       },
     ],
     meta: {

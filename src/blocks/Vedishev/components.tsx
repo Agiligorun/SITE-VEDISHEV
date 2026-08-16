@@ -3,6 +3,19 @@ import type { Config } from '@/payload-types'
 import { CMSLink } from '@/components/Link'
 import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  Building2,
+  FileText,
+  Gavel,
+  Handshake,
+  Landmark,
+  Scale,
+  ScrollText,
+  ShieldCheck,
+  Users,
+} from 'lucide-react'
 import { ConsultationForm } from './ConsultationForm'
 
 type SiteSettings = Config['globals']['site-settings']
@@ -16,102 +29,328 @@ const resolveMedia = (value: unknown): MediaResource | null => {
   return null
 }
 
-const sectionIntro = (
-  eyebrow?: string | null,
-  heading?: string | null,
-  description?: string | null,
-  inverted = false,
-) => (
-  <div className="mb-10 max-w-3xl">
-    {eyebrow ? <p className={inverted ? 'section-kicker text-accent/90' : 'section-kicker'}>{eyebrow}</p> : null}
-    {heading ? <h2 className={`section-heading ${inverted ? 'text-white' : 'text-primary'}`}>{heading}</h2> : null}
-    {description ? (
-      <p className={`mt-4 max-w-2xl text-base leading-7 ${inverted ? 'text-white/72' : 'text-muted-foreground'}`}>
-        {description}
-      </p>
-    ) : null}
-  </div>
-)
+const practiceIcons = [
+  Scale,
+  ScrollText,
+  Landmark,
+  Users,
+  BriefcaseBusiness,
+  Building2,
+  Gavel,
+  FileText,
+]
 
-const PortraitPlaceholder = ({ title, description }: { title: string; description: string }) => (
-  <div className="portrait-placeholder flex h-full flex-col justify-between p-6 md:p-8">
-    <span className="placeholder-badge">PHOTO PLACEHOLDER</span>
-    <div className="max-w-sm">
-      <p className="font-serif text-2xl text-primary md:text-3xl">{title}</p>
-      <p className="mt-3 text-sm leading-6 text-muted-foreground">{description}</p>
+const trustIcons = [Handshake, ShieldCheck, Scale]
+
+const practiceFallbacks = [
+  {
+    title: 'Уголовные дела',
+    shortDescription: 'Защита на всех стадиях уголовного процесса по делам любой сложности.',
+  },
+  {
+    title: 'Гражданские дела',
+    shortDescription: 'Представительство в судах по гражданским спорам и конфликтам.',
+  },
+  {
+    title: 'Арбитражные споры',
+    shortDescription: 'Защита интересов бизнеса в арбитражных судах и переговорах.',
+  },
+  {
+    title: 'Семейные споры',
+    shortDescription: 'Деликатное сопровождение в семейных конфликтах и переговорах.',
+  },
+  {
+    title: 'Наследственные дела',
+    shortDescription: 'Оформление наследства, споры о наследовании и восстановление сроков.',
+  },
+  {
+    title: 'Жилищные споры',
+    shortDescription: 'Споры о праве пользования, вселении, выселении и признании права собственности.',
+  },
+  {
+    title: 'Административные дела',
+    shortDescription: 'Обжалование действий органов власти и должностных лиц.',
+  },
+  {
+    title: 'Международные дела',
+    shortDescription: 'Правовая помощь в делах с иностранным элементом и трансграничными рисками.',
+  },
+]
+
+const trustFallbacks = [
+  {
+    title: 'Опыт',
+    description: 'Более 20 лет успешной адвокатской практики',
+  },
+  {
+    title: 'Индивидуальный подход',
+    description: 'Решения, основанные на анализе вашей ситуации',
+  },
+  {
+    title: 'Конфиденциальность',
+    description: 'Гарантия полной конфиденциальности',
+  },
+]
+
+const sectionTitle = (eyebrow?: string | null, heading?: string | null, description?: string | null) => (
+  <div className="mb-6 flex items-end justify-between gap-6">
+    <div className="max-w-[46rem]">
+      {eyebrow ? <p className="section-kicker">{eyebrow}</p> : null}
+      {heading ? <h2 className="section-heading text-primary">{heading}</h2> : null}
+      {description ? <p className="mt-3 max-w-[42rem] text-[0.95rem] leading-7 text-muted-foreground">{description}</p> : null}
     </div>
   </div>
 )
 
-export function HeroBlock(props: any) {
-  const { eyebrow, heading, lead, primaryLink, secondaryLink, portraitPlaceholder, siteSettings } = props
-  const heroPortrait = resolveMedia(siteSettings?.heroPortrait)
+const renderHeroHeading = (heading?: string | null) => {
+  if (!heading) return null
+
+  const lines = heading
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+
+  if (lines.length <= 1) {
+    return heading
+  }
 
   return (
-    <section className="section-shell pt-10 md:pt-14">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(22rem,0.98fr)] lg:items-center">
-        <div className="max-w-2xl">
-          {eyebrow ? <p className="section-kicker">{eyebrow}</p> : null}
-          <h1 className="max-w-3xl text-5xl leading-[0.98] text-primary md:text-7xl">{heading}</h1>
-          {lead ? <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">{lead}</p> : null}
+    <>
+      {lines.slice(0, -1).map((line) => (
+        <span className="block" key={line}>
+          {line}
+        </span>
+      ))}
+      <span className="block text-accent">{lines.at(-1)}</span>
+    </>
+  )
+}
 
-          <div className="mt-8 flex flex-wrap gap-4">
-            {primaryLink?.link ? <CMSLink {...primaryLink.link} className="gold-button" /> : null}
-            {secondaryLink?.link ? (
-              <CMSLink
-                {...secondaryLink.link}
-                className="rounded-full border border-primary/12 px-6 py-3 font-medium text-primary transition-colors hover:border-primary/25"
+const buildPracticeItems = (areas: any[] = []) =>
+  practiceFallbacks.map((fallback, index) => {
+    const area = areas[index]
+
+    return {
+      iconLabel: area?.iconLabel || fallback.title.slice(0, 2).toUpperCase(),
+      shortDescription: area?.shortDescription || fallback.shortDescription,
+      title: area?.title || fallback.title,
+    }
+  })
+
+const buildTrustItems = (items: any[] = []) =>
+  trustFallbacks.map((fallback, index) => {
+    const item = items[index]
+
+    return {
+      description: item?.description || fallback.description,
+      title: item?.title || fallback.title,
+    }
+  })
+
+const PlaceholderPhoto = ({
+  dark = false,
+  title,
+  description,
+}: {
+  dark?: boolean
+  title: string
+  description: string
+}) => (
+  <div
+    className={
+      dark
+        ? 'relative flex h-full min-h-[420px] flex-col justify-between overflow-hidden bg-[linear-gradient(125deg,#374153_0%,#c3b9ab_46%,#e8e1d8_100%)] p-8 text-white'
+        : 'relative flex h-full min-h-[280px] flex-col justify-between overflow-hidden bg-[linear-gradient(135deg,#e1dad0_0%,#f6f2eb_100%)] p-6 text-primary'
+    }
+  >
+    <div className="absolute inset-0 bg-[repeating-linear-gradient(-45deg,transparent,transparent_20px,rgba(255,255,255,0.18)_20px,rgba(255,255,255,0.18)_40px)]" />
+    <span className="relative z-10 inline-flex max-w-max border border-white/35 bg-white/55 px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-primary">
+      Photo placeholder
+    </span>
+    <div className="relative z-10 max-w-[17rem] bg-white/76 p-5 text-primary backdrop-blur-[1px]">
+      <p className="font-serif text-[2rem] leading-[1.05]">{title}</p>
+      <p className="mt-3 text-[0.92rem] leading-6 text-primary/72">{description}</p>
+    </div>
+  </div>
+)
+
+const PracticeCard = ({ area, index }: { area: any; index: number }) => {
+  const Icon = practiceIcons[index % practiceIcons.length]
+
+  return (
+    <article className="border border-border bg-white p-5">
+      <div className="flex h-10 w-10 items-center justify-center border border-accent/55 text-accent">
+        <Icon className="size-[1.05rem] stroke-[1.6]" />
+      </div>
+      <h3 className="mt-5 font-serif text-[1.45rem] leading-[1.15] text-primary">{area.title}</h3>
+      <p className="mt-3 text-[0.92rem] leading-6 text-muted-foreground">{area.shortDescription}</p>
+    </article>
+  )
+}
+
+function AboutColumn({
+  block,
+  siteSettings,
+}: {
+  block: any
+  siteSettings?: SiteSettings
+}) {
+  const profilePortrait = resolveMedia(siteSettings?.profilePortrait)
+
+  return (
+    <div id="about">
+      <p className="section-kicker">{block.eyebrow || 'Об адвокате'}</p>
+      <div className="grid gap-5 md:grid-cols-[10rem_minmax(0,1fr)]">
+        <div className="border border-border bg-white">
+          <div className="relative aspect-[4/5] overflow-hidden bg-[#e4ddd3]">
+            {profilePortrait ? (
+              <Media
+                fill
+                imgClassName="h-full w-full object-cover"
+                pictureClassName="block h-full w-full"
+                resource={profilePortrait}
+                size="(max-width: 1024px) 100vw, 180px"
               />
-            ) : null}
-          </div>
-
-          <div className="mt-10 grid gap-4 border-t border-primary/10 pt-6 text-sm text-muted-foreground sm:grid-cols-3">
-            <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-accent">Статус</p>
-              <p className="mt-2 text-primary">{siteSettings?.professionalStatus || 'Адвокатская практика'}</p>
-            </div>
-            <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-accent">Адрес</p>
-              <p className="mt-2 text-primary">
-                {siteSettings?.address || 'Адрес будет добавлен через CMS после верификации'}
-              </p>
-            </div>
-            <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-accent">Связь</p>
-              <p className="mt-2 text-primary">{siteSettings?.phone || 'Контакт будет опубликован после проверки'}</p>
-            </div>
+            ) : (
+              <PlaceholderPhoto
+                title="Портрет"
+                description="Подтвержденная фотография будет добавлена позже, но геометрия блока уже соответствует макету."
+              />
+            )}
           </div>
         </div>
 
-        <div className="premium-card relative overflow-hidden p-5 md:p-7">
-          <div className="absolute inset-x-8 top-0 h-px bg-accent/55" />
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-[#ebe6dc]">
-            {heroPortrait ? (
-              <>
+        <div>
+          <p className="font-serif text-[2rem] leading-[1.08] text-primary">
+            {siteSettings?.fullName || 'Николай Павлович Ведищев'}
+          </p>
+          <p className="mt-2 text-[0.95rem] text-primary/72">
+            {siteSettings?.professionalStatus || 'Адвокат, регистрационный номер будет добавлен через CMS'}
+          </p>
+          {block.description ? (
+            <p className="mt-6 text-[0.95rem] leading-7 text-muted-foreground">{block.description}</p>
+          ) : null}
+          {block.content ? (
+            <RichText
+              className="mt-5 space-y-4 text-[0.95rem] leading-7 text-muted-foreground"
+              data={block.content}
+              enableGutter={false}
+              enableProse={false}
+            />
+          ) : null}
+          {block.profileLink?.link ? (
+            <CMSLink {...block.profileLink.link} className="gold-button mt-6 inline-flex min-w-[12rem] justify-center" />
+          ) : null}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PublicationsColumn({ block }: { block: any }) {
+  return (
+    <div id="publications">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="section-kicker">{block.eyebrow || 'Публикации'}</p>
+          <h2 className="font-serif text-[2rem] leading-[1.08] text-primary">
+            {block.heading || 'Публикации в СМИ'}
+          </h2>
+        </div>
+        <a className="inline-flex items-center gap-2 text-[0.88rem] text-primary transition-opacity hover:opacity-70" href="#publications">
+          Все публикации
+          <ArrowRight className="size-4 stroke-[1.7]" />
+        </a>
+      </div>
+
+      <div className="mt-6 border border-border bg-white">
+        {block.publications?.map((publication: any, index: number) => (
+          <article
+            className="grid gap-4 border-b border-border px-6 py-5 last:border-b-0 md:grid-cols-[10.5rem_minmax(0,1fr)]"
+            key={publication?.id || index}
+          >
+            <div className="flex items-center text-[1.1rem] font-medium text-primary/72">{publication?.source}</div>
+            <div>
+              <h3 className="font-serif text-[1.28rem] leading-[1.25] text-primary">{publication?.title}</h3>
+              {publication?.publishedAt ? (
+                <p className="mt-2 text-[0.86rem] text-muted-foreground">
+                  {new Date(publication.publishedAt).toLocaleDateString('ru-RU')}
+                </p>
+              ) : null}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export function HomeAboutPublicationsZone({
+  aboutBlock,
+  publicationsBlock,
+  siteSettings,
+}: {
+  aboutBlock: any
+  publicationsBlock: any
+  siteSettings?: SiteSettings
+}) {
+  return (
+    <section className="container py-10">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:items-start">
+        <AboutColumn block={aboutBlock} siteSettings={siteSettings} />
+        <PublicationsColumn block={publicationsBlock} />
+      </div>
+    </section>
+  )
+}
+
+export function HeroBlock(props: any) {
+  const { eyebrow, heading, lead, primaryLink, portraitPlaceholder, siteSettings } = props
+  const heroPortrait = resolveMedia(siteSettings?.heroPortrait)
+
+  return (
+    <section className="container pt-4 pb-0">
+      <div className="border border-border bg-white" id="hero">
+        <div className="grid lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+          <div className="flex flex-col justify-center px-8 py-10 lg:px-12 lg:py-14">
+            {eyebrow ? <p className="section-kicker">{eyebrow}</p> : null}
+            <h1 className="max-w-[31rem] font-serif text-[3.7rem] leading-[0.96] tracking-[-0.04em] text-primary">
+              {renderHeroHeading(heading)}
+            </h1>
+            {lead ? <p className="mt-6 max-w-[24rem] text-[1rem] leading-8 text-primary/82">{lead}</p> : null}
+            <div className="mt-8">
+              {primaryLink?.link ? (
+                <CMSLink {...primaryLink.link} className="gold-button inline-flex min-w-[13.25rem] justify-center" />
+              ) : (
+                <a className="gold-button inline-flex min-w-[13.25rem] justify-center" href="#consultation">
+                  Получить консультацию
+                </a>
+              )}
+            </div>
+          </div>
+
+          <div className="border-t border-border lg:border-t-0 lg:border-l">
+            <div className="relative h-full min-h-[430px] overflow-hidden bg-[#dbd5cc]">
+              {heroPortrait ? (
                 <Media
                   fill
                   imgClassName="h-full w-full object-cover"
                   pictureClassName="block h-full w-full"
                   priority
                   resource={heroPortrait}
-                  size="(max-width: 1024px) 100vw, 42vw"
+                  size="(max-width: 1024px) 100vw, 52vw"
                 />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary via-primary/62 to-transparent px-6 pb-6 pt-12 text-white">
-                  <p className="font-serif text-2xl">{siteSettings?.fullName || 'Николай Павлович Ведищев'}</p>
-                  <p className="mt-2 text-sm uppercase tracking-[0.22em] text-white/72">
-                    {siteSettings?.professionalStatus || 'Адвокат'}
-                  </p>
-                </div>
-              </>
-            ) : (
-              <PortraitPlaceholder
-                title="Фотография будет добавлена после верификации"
-                description={
-                  portraitPlaceholder ||
-                  'Здесь будет подтвержденный портрет Николая Павловича Ведищева после согласования источника. До публикации используется только явно обозначенный placeholder.'
-                }
-              />
-            )}
+              ) : (
+                <PlaceholderPhoto
+                  dark
+                  title="Фотография будет добавлена после верификации"
+                  description={
+                    portraitPlaceholder ||
+                    'Пока реальное фото не загружено в CMS, placeholder занимает ту же геометрию, что и будущий портрет.'
+                  }
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -120,18 +359,26 @@ export function HeroBlock(props: any) {
 }
 
 export function TrustStripBlock(props: any) {
+  const items = buildTrustItems(props.items)
+
   return (
-    <section className="section-shell pt-0">
-      <div className="premium-card grid gap-4 px-6 py-6 md:grid-cols-4 md:px-8">
-        {props.items?.map((item: any, index: number) => (
-          <div className="border-primary/8 md:border-r md:pr-6 last:border-r-0" key={index}>
-            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-accent">
-              {String(index + 1).padStart(2, '0')}
-            </p>
-            <p className="mt-3 font-serif text-xl text-primary">{item.title}</p>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.description}</p>
-          </div>
-        ))}
+    <section className="container pb-0">
+      <div className="grid border-x border-b border-border bg-white md:grid-cols-3">
+        {items.map((item, index) => {
+          const Icon = trustIcons[index % trustIcons.length]
+
+          return (
+            <div className="flex gap-4 border-b border-border px-6 py-4 last:border-b-0 md:border-b-0 md:border-r last:md:border-r-0" key={item.title}>
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-accent/55 text-accent">
+                <Icon className="size-[1rem] stroke-[1.6]" />
+              </div>
+              <div>
+                <p className="font-serif text-[1.12rem] leading-[1.15] text-primary">{item.title}</p>
+                <p className="mt-1 text-[0.9rem] leading-6 text-muted-foreground">{item.description}</p>
+              </div>
+            </div>
+          )
+        })}
       </div>
     </section>
   )
@@ -139,31 +386,37 @@ export function TrustStripBlock(props: any) {
 
 export function PracticeGridBlock(props: any) {
   const { eyebrow, heading, description, areas, inlineFormTitle, sourcePage, siteSettings } = props
+  const renderedAreas = buildPracticeItems(areas)
 
   return (
-    <section className="section-shell">
-      {sectionIntro(eyebrow, heading, description)}
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {areas?.map((area: any, index: number) => (
-            <article className="premium-card flex h-full flex-col p-6" key={area?.id || index}>
-              <div className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-accent/20 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-                {area?.iconLabel?.slice(0, 2) || String(index + 1).padStart(2, '0')}
-              </div>
-              <h3 className="mt-5 font-serif text-2xl text-primary">{area?.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">{area?.shortDescription}</p>
-            </article>
+    <section className="container py-10" id="practice">
+      <div className="mb-6 flex items-end justify-between gap-6">
+        <div className="max-w-[44rem]">
+          {eyebrow ? <p className="section-kicker">{eyebrow}</p> : null}
+          {heading ? <h2 className="section-heading text-primary">{heading}</h2> : null}
+        </div>
+        <a className="hidden items-center gap-2 text-[0.9rem] text-primary transition-opacity hover:opacity-70 lg:inline-flex" href="#practice">
+          Все направления
+          <ArrowRight className="size-4 stroke-[1.7]" />
+        </a>
+      </div>
+      {description ? <p className="mb-6 max-w-[43rem] text-[0.95rem] leading-7 text-muted-foreground">{description}</p> : null}
+
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {renderedAreas.map((area, index) => (
+            <PracticeCard area={area} index={index} key={area.title} />
           ))}
         </div>
 
-        <aside className="rounded-[2rem] bg-primary p-6 text-white md:p-8">
-          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-accent/90">Запись</p>
+        <aside className="bg-primary px-7 py-7 text-white" id="consultation">
           <ConsultationForm
+            buttonLabel="Отправить заявку"
             compact
-            description="Краткая форма остается на видном месте, как в референсе, и отправляет обращение прямо в CMS."
+            description="Оставьте заявку, и мы свяжемся с вами в ближайшее время."
             disclaimer={siteSettings?.consultationDisclaimer}
             sourcePage={sourcePage}
-            title={inlineFormTitle}
+            title={inlineFormTitle || 'Нужна помощь адвоката?'}
           />
         </aside>
       </div>
@@ -172,85 +425,17 @@ export function PracticeGridBlock(props: any) {
 }
 
 export function AboutProfileBlock(props: any) {
-  const { eyebrow, heading, description, content, highlights, profileLink, siteSettings } = props
-  const profilePortrait = resolveMedia(siteSettings?.profilePortrait)
-
   return (
-    <section className="section-shell">
-      <div className="grid gap-8 lg:grid-cols-[minmax(18rem,26rem)_minmax(0,1fr)] lg:items-start">
-        <div className="premium-card overflow-hidden p-4 md:p-5">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-secondary">
-            {profilePortrait ? (
-              <Media
-                fill
-                imgClassName="h-full w-full object-cover"
-                pictureClassName="block h-full w-full"
-                resource={profilePortrait}
-                size="(max-width: 1024px) 100vw, 28vw"
-              />
-            ) : (
-              <PortraitPlaceholder
-                title="Подтвержденный портрет добавляется позже"
-                description="После подтверждения источника здесь появится портрет для блока «Об адвокате». До этого дизайн остается честным и явно помечает отсутствие production-фото."
-              />
-            )}
-          </div>
-        </div>
-
-        <div>
-          {sectionIntro(eyebrow, heading, description)}
-          {content ? <RichText className="max-w-3xl text-primary" data={content} /> : null}
-          {highlights?.length ? (
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              {highlights.map((item: any, index: number) => (
-                <div className="premium-card p-5" key={index}>
-                  <p className="font-serif text-xl text-primary">{item.title}</p>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.description}</p>
-                </div>
-              ))}
-            </div>
-          ) : null}
-          {profileLink?.link ? <CMSLink {...profileLink.link} className="gold-button mt-8 inline-flex" /> : null}
-        </div>
-      </div>
+    <section className="container py-10">
+      <AboutColumn block={props} siteSettings={props.siteSettings} />
     </section>
   )
 }
 
 export function PublicationsListBlock(props: any) {
-  const { eyebrow, heading, description, publications } = props
-
   return (
-    <section className="section-shell">
-      {sectionIntro(eyebrow, heading, description)}
-      <div className="premium-card divide-y divide-border overflow-hidden">
-        {publications?.map((publication: any, index: number) => (
-          <article className="grid gap-4 p-6 md:grid-cols-[12rem_minmax(0,1fr)_11rem]" key={publication?.id || index}>
-            <div className="text-sm text-muted-foreground">{publication?.source}</div>
-            <div>
-              <h3 className="font-serif text-2xl text-primary">{publication?.title}</h3>
-              {publication?.description ? (
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">{publication.description}</p>
-              ) : null}
-              {publication?.url ? (
-                <a
-                  className="mt-4 inline-flex text-sm font-semibold text-primary underline decoration-border underline-offset-4"
-                  href={publication.url}
-                  rel="noreferrer noopener"
-                  target="_blank"
-                >
-                  Открыть материал
-                </a>
-              ) : null}
-            </div>
-            <div className="text-sm text-muted-foreground md:text-right">
-              {publication?.publishedAt
-                ? new Date(publication.publishedAt).toLocaleDateString('ru-RU')
-                : publication?.type}
-            </div>
-          </article>
-        ))}
-      </div>
+    <section className="container py-10">
+      <PublicationsColumn block={props} />
     </section>
   )
 }
@@ -259,12 +444,23 @@ export function ArticlesGridBlock(props: any) {
   const { eyebrow, heading, description, articles } = props
 
   return (
-    <section className="section-shell">
-      {sectionIntro(eyebrow, heading, description)}
+    <section className="container py-10">
+      <div className="mb-6 flex items-end justify-between gap-6">
+        <div className="max-w-[44rem]">
+          {eyebrow ? <p className="section-kicker">{eyebrow}</p> : null}
+          {heading ? <h2 className="section-heading text-primary">{heading}</h2> : null}
+          {description ? <p className="mt-3 text-[0.95rem] leading-7 text-muted-foreground">{description}</p> : null}
+        </div>
+        <a className="hidden items-center gap-2 text-[0.9rem] text-primary transition-opacity hover:opacity-70 lg:inline-flex" href="/posts">
+          Все статьи
+          <ArrowRight className="size-4 stroke-[1.7]" />
+        </a>
+      </div>
+
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {articles?.map((article: any, index: number) => (
-          <article className="premium-card overflow-hidden" key={article?.id || index}>
-            <div className="relative aspect-[4/3] bg-secondary">
+          <article className="border border-border bg-white" key={article?.id || index}>
+            <div className="relative aspect-[4/3] overflow-hidden bg-[#ddd7cd]">
               {typeof article?.heroImage === 'object' && article.heroImage ? (
                 <Media
                   fill
@@ -274,22 +470,23 @@ export function ArticlesGridBlock(props: any) {
                   size="(max-width: 1280px) 50vw, 22vw"
                 />
               ) : (
-                <div className="flex h-full items-end bg-[linear-gradient(180deg,rgba(17,32,62,0.02),rgba(17,32,62,0.12))] p-5">
-                  <p className="text-xs uppercase tracking-[0.24em] text-primary/55">Материал без обложки</p>
+                <div className="flex h-full items-end bg-[linear-gradient(180deg,rgba(16,28,49,0.04),rgba(16,28,49,0.22))] p-5">
+                  <p className="text-[0.78rem] uppercase tracking-[0.22em] text-primary/55">Материал без обложки</p>
                 </div>
               )}
             </div>
-            <div className="p-6">
-              <p className="text-xs uppercase tracking-[0.22em] text-accent">
+            <div className="px-6 py-5">
+              <p className="text-[0.83rem] text-muted-foreground">
                 {article?.publishedAt ? new Date(article.publishedAt).toLocaleDateString('ru-RU') : 'Материал'}
               </p>
-              <h3 className="mt-3 font-serif text-2xl text-primary">{article?.title}</h3>
+              <h3 className="mt-3 font-serif text-[1.55rem] leading-[1.22] text-primary">{article?.title}</h3>
               {article?.meta?.description ? (
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">{article.meta.description}</p>
+                <p className="mt-3 text-[0.92rem] leading-6 text-muted-foreground">{article.meta.description}</p>
               ) : null}
               {article?.slug ? (
-                <a className="mt-4 inline-flex text-sm font-semibold text-primary" href={`/posts/${article.slug}`}>
+                <a className="mt-5 inline-flex items-center gap-2 text-[0.92rem] font-medium text-primary transition-opacity hover:opacity-70" href={`/posts/${article.slug}`}>
                   Читать далее
+                  <ArrowRight className="size-4 stroke-[1.7]" />
                 </a>
               ) : null}
             </div>
@@ -304,13 +501,17 @@ export function FAQBlock(props: any) {
   const { eyebrow, heading, description, items } = props
 
   return (
-    <section className="section-shell">
-      {sectionIntro(eyebrow, heading, description)}
-      <div className="grid gap-4">
+    <section className="container py-10">
+      {sectionTitle(eyebrow, heading, description)}
+      <div className="grid gap-3">
         {items?.map((item: any, index: number) => (
-          <details className="premium-card p-6" key={index}>
-            <summary className="cursor-pointer list-none font-serif text-2xl text-primary">{item.question}</summary>
-            {item.answer ? <RichText className="mt-4" data={item.answer} /> : null}
+          <details className="border border-border bg-white px-5 py-4" key={index}>
+            <summary className="cursor-pointer list-none font-serif text-[1.35rem] leading-[1.2] text-primary">
+              {item.question}
+            </summary>
+            {item.answer ? (
+              <RichText className="mt-4 text-[0.95rem] leading-7 text-muted-foreground" data={item.answer} enableGutter={false} enableProse={false} />
+            ) : null}
           </details>
         ))}
       </div>
@@ -322,57 +523,38 @@ export function ContactsBlock(props: any) {
   const settings = props.siteSettings
 
   return (
-    <section className="section-shell">
-      {sectionIntro(props.eyebrow, props.heading, props.description)}
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-        <div className="premium-card p-6 md:p-8">
+    <section className="container py-10">
+      {sectionTitle(props.eyebrow, props.heading, props.description)}
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
+        <div className="border border-border bg-white px-6 py-6 md:px-8">
           <div className="grid gap-8 md:grid-cols-2">
             <div>
-              <p className="section-kicker">Контакты</p>
-              <p className="font-serif text-3xl text-primary">{settings?.fullName || 'Николай Павлович Ведищев'}</p>
-              <p className="mt-2 text-sm text-muted-foreground">{settings?.professionalStatus}</p>
+              <p className="font-serif text-[2rem] leading-[1.08] text-primary">
+                {settings?.fullName || 'Николай Павлович Ведищев'}
+              </p>
+              <p className="mt-2 text-[0.95rem] text-primary/72">{settings?.professionalStatus}</p>
               {settings?.advocateDetails ? (
-                <p className="mt-6 text-sm leading-6 text-muted-foreground">{settings.advocateDetails}</p>
+                <p className="mt-5 text-[0.95rem] leading-7 text-muted-foreground">{settings.advocateDetails}</p>
               ) : null}
             </div>
-            <div className="space-y-4 text-sm leading-6 text-muted-foreground">
+            <div className="space-y-4 text-[0.95rem] leading-7 text-muted-foreground">
               {settings?.phone ? <p>Телефон: {settings.phone}</p> : null}
               {settings?.email ? <p>Email: {settings.email}</p> : null}
               {settings?.address ? <p>Адрес: {settings.address}</p> : null}
               {settings?.workingHours ? <p>Часы работы: {settings.workingHours}</p> : null}
-              {settings?.telegram ? <p>Telegram: {settings.telegram}</p> : null}
-              {settings?.whatsApp ? <p>WhatsApp: {settings.whatsApp}</p> : null}
             </div>
           </div>
         </div>
 
-        <aside className="rounded-[2rem] bg-primary p-6 text-white md:p-8">
-          <p className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-accent/90">Консультация</p>
-          <p className="mt-4 font-serif text-3xl">Спокойная и конфиденциальная коммуникация</p>
-          <p className="mt-4 text-sm leading-6 text-white/72">
-            Контактный блок сохраняет характер референса: без агрессивных обещаний, с понятной записью на консультацию и управляемыми данными из CMS.
-          </p>
-          <div className="mt-6 flex flex-col gap-3 text-sm">
-            {settings?.telegram ? (
-              <a className="rounded-full border border-white/16 px-4 py-3 text-white/84 transition-colors hover:border-white/28 hover:text-white" href={settings.telegram}>
-                Написать в Telegram
-              </a>
-            ) : null}
-            {settings?.whatsApp ? (
-              <a className="rounded-full border border-white/16 px-4 py-3 text-white/84 transition-colors hover:border-white/28 hover:text-white" href={settings.whatsApp}>
-                Написать в WhatsApp
-              </a>
-            ) : null}
-          </div>
-          <div className="mt-6">
-            {settings?.primaryCTA?.link ? (
-              <CMSLink {...settings.primaryCTA.link} className="gold-button" />
-            ) : (
-              <a className="gold-button" href="#consultation">
-                Записаться на консультацию
-              </a>
-            )}
-          </div>
+        <aside className="bg-primary px-7 py-7 text-white">
+          <ConsultationForm
+            buttonLabel="Отправить заявку"
+            compact
+            description="Оставьте заявку, и обращение сохранится в CMS."
+            disclaimer={settings?.consultationDisclaimer}
+            sourcePage={props.sourcePage}
+            title="Запись на консультацию"
+          />
         </aside>
       </div>
     </section>
@@ -381,19 +563,21 @@ export function ContactsBlock(props: any) {
 
 export function ConsultationCtaBlock(props: any) {
   return (
-    <section className="section-shell" id="consultation">
-      <div className="rounded-[2rem] bg-primary px-6 py-8 text-white md:px-8 md:py-10">
-        <div className="grid gap-8 xl:grid-cols-[minmax(0,0.95fr)_minmax(20rem,1fr)] xl:items-start">
+    <section className="container py-10">
+      <div className="bg-primary px-7 py-8 text-white">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(20rem,1fr)] lg:items-start">
           <div>
-            {sectionIntro(props.eyebrow, props.heading, props.description, true)}
-            {props.siteSettings?.advocateDetails ? (
-              <p className="max-w-xl text-sm leading-6 text-white/60">{props.siteSettings.advocateDetails}</p>
+            {props.eyebrow ? <p className="section-kicker text-accent/90">{props.eyebrow}</p> : null}
+            {props.heading ? (
+              <h2 className="font-serif text-[2.35rem] leading-[1.05] text-white">{props.heading}</h2>
             ) : null}
+            {props.description ? <p className="mt-4 max-w-[28rem] text-[0.95rem] leading-7 text-white/72">{props.description}</p> : null}
           </div>
-          <div className="rounded-[1.75rem] border border-white/12 bg-white/5 p-5 md:p-7">
+
+          <div className="border border-white/10 bg-[#1f2c44] p-6">
             <ConsultationForm
               buttonLabel="Отправить обращение"
-              description="Форма остается лаконичной, как в референсе, и передает заявку в CMS без лишних шагов."
+              description="Форма сохраняет заявку в CMS."
               disclaimer={props.siteSettings?.consultationDisclaimer}
               sourcePage={props.sourcePage}
               title={props.formTitle}

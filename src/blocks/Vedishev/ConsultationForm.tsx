@@ -9,6 +9,7 @@ type Props = {
   disclaimer?: string
   title?: string
   sourcePage: string
+  variant?: 'default' | 'footer'
 }
 
 const initialState = {
@@ -26,10 +27,13 @@ export function ConsultationForm({
   disclaimer,
   title = 'Нужна помощь адвоката?',
   sourcePage,
+  variant = 'default',
 }: Props) {
   const [form, setForm] = useState(initialState)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [error, setError] = useState('')
+
+  const isFooter = variant === 'footer'
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -44,6 +48,7 @@ export function ConsultationForm({
         },
         body: JSON.stringify({
           ...form,
+          name: isFooter ? form.name || 'Footer consultation request' : form.name,
           sourcePage,
         }),
       })
@@ -63,58 +68,90 @@ export function ConsultationForm({
     }
   }
 
+  const titleClassName = isFooter
+    ? 'font-serif text-[1.85rem] leading-[1.1] text-white'
+    : 'mb-2 font-serif text-[2rem] leading-[1.08] text-white'
+  const descriptionClassName = isFooter
+    ? 'mt-4 text-[0.95rem] leading-7 text-white/72'
+    : 'text-sm leading-6 text-white/70'
+  const inputClassName =
+    'h-11 w-full border border-white/10 bg-[#24324b] px-4 text-sm text-white placeholder:text-white/46 focus:outline-none'
+  const textareaClassName =
+    'min-h-[120px] w-full border border-white/10 bg-[#24324b] px-4 py-3 text-sm text-white placeholder:text-white/46 focus:outline-none'
+
   return (
     <form className="space-y-4" onSubmit={onSubmit}>
       <div>
-        <p className="mb-2 font-serif text-2xl text-white">{title}</p>
-        <p className="text-sm leading-6 text-white/70">{description}</p>
+        <p className={titleClassName}>{title}</p>
+        <p className={descriptionClassName}>{description}</p>
       </div>
 
-      <div className={compact ? 'space-y-3' : 'grid gap-3 md:grid-cols-2'}>
-        <input
-          className="h-12 rounded-2xl border border-white/15 bg-white/8 px-4 text-sm text-white placeholder:text-white/45"
-          onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
-          placeholder="Ваше имя"
-          required
-          value={form.name}
-        />
-        <input
-          className="h-12 rounded-2xl border border-white/15 bg-white/8 px-4 text-sm text-white placeholder:text-white/45"
-          onChange={(event) => setForm((prev) => ({ ...prev, phone: event.target.value }))}
-          placeholder="Телефон"
-          required
-          value={form.phone}
-        />
-        <input
-          className="h-12 rounded-2xl border border-white/15 bg-white/8 px-4 text-sm text-white placeholder:text-white/45"
-          onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
-          placeholder="Email"
-          type="email"
-          value={form.email}
-        />
-        <input
-          className="h-12 rounded-2xl border border-white/15 bg-white/8 px-4 text-sm text-white placeholder:text-white/45"
-          onChange={(event) => setForm((prev) => ({ ...prev, messenger: event.target.value }))}
-          placeholder="Telegram / WhatsApp"
-          value={form.messenger}
-        />
-      </div>
+      {isFooter ? (
+        <div className="space-y-3">
+          <input
+            className={inputClassName}
+            onChange={(event) => setForm((prev) => ({ ...prev, phone: event.target.value }))}
+            placeholder="Ваш телефон"
+            required
+            value={form.phone}
+          />
+          <button className="gold-button w-full justify-center" disabled={status === 'loading'} type="submit">
+            {status === 'loading' ? 'Отправляем...' : buttonLabel}
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className={compact ? 'space-y-3' : 'grid gap-3 md:grid-cols-2'}>
+            <input
+              className={inputClassName}
+              onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
+              placeholder="Ваше имя"
+              required
+              value={form.name}
+            />
+            <input
+              className={inputClassName}
+              onChange={(event) => setForm((prev) => ({ ...prev, phone: event.target.value }))}
+              placeholder="Ваш телефон"
+              required
+              value={form.phone}
+            />
+            <input
+              className={inputClassName}
+              onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+              placeholder="Email"
+              type="email"
+              value={form.email}
+            />
+            <input
+              className={inputClassName}
+              onChange={(event) => setForm((prev) => ({ ...prev, messenger: event.target.value }))}
+              placeholder="Telegram / WhatsApp"
+              value={form.messenger}
+            />
+          </div>
 
-      <textarea
-        className="min-h-28 w-full rounded-[1.5rem] border border-white/15 bg-white/8 px-4 py-3 text-sm text-white placeholder:text-white/45"
-        onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))}
-        placeholder="Кратко опишите вопрос"
-        value={form.message}
-      />
+          <textarea
+            className={textareaClassName}
+            onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))}
+            placeholder="Опишите ваш вопрос"
+            value={form.message}
+          />
 
-      <button className="gold-button w-full" disabled={status === 'loading'} type="submit">
-        {status === 'loading' ? 'Отправляем...' : buttonLabel}
-      </button>
+          <button className="gold-button w-full justify-center" disabled={status === 'loading'} type="submit">
+            {status === 'loading' ? 'Отправляем...' : buttonLabel}
+          </button>
+        </>
+      )}
 
-      {disclaimer ? <p className="text-xs leading-5 text-white/55">{disclaimer}</p> : null}
+      {disclaimer ? <p className="text-[0.75rem] leading-5 text-white/50">{disclaimer}</p> : null}
 
       {status === 'success' && (
-        <p className="text-sm text-emerald-200">Заявка сохранена. Мы можем продолжать обработку через CMS.</p>
+        <p className="text-sm text-emerald-200">
+          {isFooter
+            ? 'Телефон сохранен. Мы свяжемся через CMS.'
+            : 'Заявка сохранена. Мы можем продолжать обработку через CMS.'}
+        </p>
       )}
 
       {status === 'error' && <p className="text-sm text-rose-200">{error}</p>}

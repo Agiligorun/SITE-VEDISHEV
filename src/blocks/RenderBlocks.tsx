@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 
 import {
   AboutProfileBlock,
+  HomeAboutPublicationsZone,
   ArticlesGridBlock,
   ConsultationCtaBlock,
   ContactsBlock,
@@ -30,24 +31,41 @@ export const RenderBlocks: React.FC<{
   sourcePage: string
 }> = (props) => {
   const { blocks, siteSettings, sourcePage } = props
+  const isHomePage = sourcePage === '/home' || sourcePage === '/'
 
   const hasBlocks = blocks && Array.isArray(blocks) && blocks.length > 0
 
   if (hasBlocks) {
+    const filteredBlocks = isHomePage
+      ? blocks.filter((block) => !['faqBlock', 'consultationCta', 'contactsBlock'].includes(block?.blockType))
+      : blocks
+
     return (
       <Fragment>
-        {blocks.map((block, index) => {
+        {filteredBlocks.map((block, index) => {
           const { blockType } = block
+          const nextBlock = filteredBlocks[index + 1]
+
+          if (blockType === 'publicationsList' && filteredBlocks[index - 1]?.blockType === 'aboutProfile') {
+            return null
+          }
+
+          if (isHomePage && blockType === 'aboutProfile' && nextBlock?.blockType === 'publicationsList') {
+            return (
+              <HomeAboutPublicationsZone
+                aboutBlock={block}
+                key={`${blockType}-${index}`}
+                publicationsBlock={nextBlock}
+                siteSettings={siteSettings}
+              />
+            )
+          }
 
           if (blockType && blockType in blockComponents) {
             const Block = blockComponents[blockType as keyof typeof blockComponents]
 
             if (Block) {
-              return (
-                <div className="my-16" key={index}>
-                  <Block {...block} siteSettings={siteSettings} sourcePage={sourcePage} />
-                </div>
-              )
+              return <Block {...block} key={`${blockType}-${index}`} siteSettings={siteSettings} sourcePage={sourcePage} />
             }
           }
           return null
