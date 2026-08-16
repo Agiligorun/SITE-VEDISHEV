@@ -25,10 +25,9 @@ export const generateMeta = async (args: {
   const { doc } = args
 
   const ogImage = getImageURL(doc?.meta?.image)
+  const siteName = 'Николай Павлович Ведищев'
 
-  const title = doc?.meta?.title
-    ? doc?.meta?.title + ' | Payload Website Template'
-    : 'Payload Website Template'
+  const title = doc?.meta?.title ? `${doc.meta.title} | ${siteName}` : siteName
 
   return {
     description: doc?.meta?.description,

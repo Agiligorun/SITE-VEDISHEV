@@ -684,6 +684,45 @@ function toStableAsciiSlug(value: string) {
   return `item-${Buffer.from(value).toString('hex').slice(0, 12)}`
 }
 
+function hasFeatureableTitle(value: unknown) {
+  const title = normalizeWhitespace(String(value || ''))
+
+  if (title.length < 6) return false
+  if (!/[A-Za-zА-Яа-яЁё]/.test(title)) return false
+  if (/^[\d\s./:-]+$/.test(title)) return false
+
+  return true
+}
+
+function pickFeaturedDocuments<T extends Record<string, any>>(
+  items: T[],
+  size: number,
+  options: { preferVerified?: boolean; preferNonLegacy?: boolean } = {},
+) {
+  const { preferVerified = false, preferNonLegacy = false } = options
+
+  return [...items]
+    .filter((item) => hasFeatureableTitle(item?.title))
+    .sort((left, right) => {
+      const leftNonLegacy = preferNonLegacy && left?.sourceType && left.sourceType !== 'legacy-site' ? 1 : 0
+      const rightNonLegacy = preferNonLegacy && right?.sourceType && right.sourceType !== 'legacy-site' ? 1 : 0
+
+      if (leftNonLegacy !== rightNonLegacy) {
+        return rightNonLegacy - leftNonLegacy
+      }
+
+      const leftVerified = preferVerified && left?.verified ? 1 : 0
+      const rightVerified = preferVerified && right?.verified ? 1 : 0
+
+      if (leftVerified !== rightVerified) {
+        return rightVerified - leftVerified
+      }
+
+      return 0
+    })
+    .slice(0, size)
+}
+
 async function upsertBySlug(payload, collection, slug, data, options = {}) {
   const { dryRun = false, group = null, summary = null } = options
   const existing = await payload.find({
@@ -1152,6 +1191,9 @@ async function main() {
     bookDocs.push(doc)
   }
 
+  const featuredPublications = pickFeaturedDocuments(publicationDocs, 4, { preferVerified: true })
+  const featuredBooks = pickFeaturedDocuments(bookDocs, 6, { preferVerified: true, preferNonLegacy: true })
+
   const postDocs = []
 
   for (const article of ARTICLE_CONFIG) {
@@ -1428,7 +1470,7 @@ async function main() {
           heading: 'Научные и профессиональные публикации',
           description:
             'Библиография собрана из авторского архива старого сайта и переведена в управляемую структуру CMS.',
-          publications: publicationDocs.slice(0, 4).map((item) => item.id),
+          publications: featuredPublications.map((item) => item.id),
         },
         {
           blockType: 'articlesGrid',
@@ -1444,7 +1486,7 @@ async function main() {
           heading: 'Книги и научные работы',
           description:
             'Книги и монографии подтверждают глубину специализации и научного интереса к судебным ошибкам, суду присяжных и уголовному процессу.',
-          books: bookDocs.slice(0, 6).map((item) => item.id),
+          books: featuredBooks.map((item) => item.id),
         },
       ],
       meta: {
@@ -1499,8 +1541,8 @@ async function main() {
           homepage: 1,
         },
         featured: {
-          publications: publicationDocs.slice(0, 4).length,
-          books: bookDocs.slice(0, 6).length,
+          publications: featuredPublications.length,
+          books: featuredBooks.length,
           posts: postDocs.length,
         },
       },
