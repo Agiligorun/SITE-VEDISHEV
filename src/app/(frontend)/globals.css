@@ -277,10 +277,14 @@ html[data-theme='light'] {
   .gold-button {
     background: #c79b5c;
     color: #fffdf8;
-    @apply px-6 py-3 text-[0.9rem] font-medium transition-colors duration-200 hover:bg-[#b88d51];
+    @apply border border-transparent px-6 py-3 text-[0.9rem] font-medium transition-colors duration-200 hover:bg-[#b88d51];
   }
 
   .gold-button[data-slot='button'] {
     @apply rounded-none shadow-none;
+  }
+
+  a.gold-button {
+    text-decoration: none;
   }
 }

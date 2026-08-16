@@ -159,17 +159,18 @@ const PlaceholderPhoto = ({
   <div
     className={
       dark
-        ? 'relative flex h-full min-h-[420px] flex-col justify-between overflow-hidden bg-[linear-gradient(125deg,#374153_0%,#c3b9ab_46%,#e8e1d8_100%)] p-8 text-white'
-        : 'relative flex h-full min-h-[280px] flex-col justify-between overflow-hidden bg-[linear-gradient(135deg,#e1dad0_0%,#f6f2eb_100%)] p-6 text-primary'
+        ? 'relative flex h-full min-h-[420px] flex-col justify-between overflow-hidden bg-[linear-gradient(115deg,#566173_0%,#bdb09d_45%,#e7dfd4_100%)] p-7 text-white'
+        : 'relative flex h-full min-h-[280px] flex-col justify-between overflow-hidden bg-[linear-gradient(135deg,#ddd4c8_0%,#f5efe6_100%)] p-6 text-primary'
     }
   >
-    <div className="absolute inset-0 bg-[repeating-linear-gradient(-45deg,transparent,transparent_20px,rgba(255,255,255,0.18)_20px,rgba(255,255,255,0.18)_40px)]" />
-    <span className="relative z-10 inline-flex max-w-max border border-white/35 bg-white/55 px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-primary">
+    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]" />
+    <div className="absolute inset-0 bg-[repeating-linear-gradient(-45deg,transparent,transparent_24px,rgba(255,255,255,0.11)_24px,rgba(255,255,255,0.11)_48px)]" />
+    <span className="relative z-10 inline-flex max-w-max border border-white/35 bg-white/58 px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-primary">
       Photo placeholder
     </span>
-    <div className="relative z-10 max-w-[17rem] bg-white/76 p-5 text-primary backdrop-blur-[1px]">
-      <p className="font-serif text-[2rem] leading-[1.05]">{title}</p>
-      <p className="mt-3 text-[0.92rem] leading-6 text-primary/72">{description}</p>
+    <div className="relative z-10 max-w-[16rem] bg-white/84 p-5 text-primary">
+      <p className="font-serif text-[1.9rem] leading-[1.05]">{title}</p>
+      <p className="mt-3 text-[0.9rem] leading-6 text-primary/72">{description}</p>
     </div>
   </div>
 )
@@ -239,7 +240,11 @@ function AboutColumn({
             />
           ) : null}
           {block.profileLink?.link ? (
-            <CMSLink {...block.profileLink.link} className="gold-button mt-6 inline-flex min-w-[12rem] justify-center" />
+            <CMSLink
+              {...block.profileLink.link}
+              appearance="inline"
+              className="gold-button mt-6 inline-flex min-w-[12rem] justify-center no-underline"
+            />
           ) : null}
         </div>
       </div>
@@ -311,18 +316,22 @@ export function HeroBlock(props: any) {
   return (
     <section className="container pt-4 pb-0">
       <div className="border border-border bg-white" id="hero">
-        <div className="grid lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
-          <div className="flex flex-col justify-center px-8 py-10 lg:px-12 lg:py-14">
+        <div className="grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+          <div className="flex flex-col justify-center px-8 py-9 lg:px-12 lg:py-11">
             {eyebrow ? <p className="section-kicker">{eyebrow}</p> : null}
-            <h1 className="max-w-[31rem] font-serif text-[3.7rem] leading-[0.96] tracking-[-0.04em] text-primary">
+            <h1 className="max-w-[29rem] font-serif text-[3.35rem] leading-[0.97] tracking-[-0.04em] text-primary lg:text-[3.55rem]">
               {renderHeroHeading(heading)}
             </h1>
-            {lead ? <p className="mt-6 max-w-[24rem] text-[1rem] leading-8 text-primary/82">{lead}</p> : null}
-            <div className="mt-8">
+            {lead ? <p className="mt-5 max-w-[23rem] text-[0.96rem] leading-7 text-primary/82">{lead}</p> : null}
+            <div className="mt-7">
               {primaryLink?.link ? (
-                <CMSLink {...primaryLink.link} className="gold-button inline-flex min-w-[13.25rem] justify-center" />
+                <CMSLink
+                  {...primaryLink.link}
+                  appearance="inline"
+                  className="gold-button inline-flex min-w-[13.25rem] justify-center no-underline"
+                />
               ) : (
-                <a className="gold-button inline-flex min-w-[13.25rem] justify-center" href="#consultation">
+                <a className="gold-button inline-flex min-w-[13.25rem] justify-center no-underline" href="#consultation">
                   Получить консультацию
                 </a>
               )}
@@ -330,7 +339,7 @@ export function HeroBlock(props: any) {
           </div>
 
           <div className="border-t border-border lg:border-t-0 lg:border-l">
-            <div className="relative h-full min-h-[430px] overflow-hidden bg-[#dbd5cc]">
+            <div className="relative h-full min-h-[420px] overflow-hidden bg-[#d6d0c6]">
               {heroPortrait ? (
                 <Media
                   fill

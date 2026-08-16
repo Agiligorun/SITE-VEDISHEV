@@ -41,26 +41,26 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, siteSettings }
       {...(theme ? { 'data-theme': theme } : {})}
     >
       <div className="container">
-        <div className="grid gap-4 py-4 lg:grid-cols-[minmax(14rem,1.1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-center">
+        <div className="grid gap-4 py-3 lg:grid-cols-[15rem_12rem_minmax(15rem,1.15fr)_13rem_auto] lg:items-center">
           <Link href="/">
             <Logo className="max-w-max" />
           </Link>
 
-          <div className="hidden text-[0.92rem] leading-6 text-primary lg:block">
+          <div className="hidden text-[0.88rem] leading-5 text-primary lg:block">
             <p className="font-semibold text-primary">{siteSettings?.fullName || 'Николай Павлович Ведищев'}</p>
             <p className="text-muted-foreground">{siteSettings?.professionalStatus || 'Адвокат'}</p>
           </div>
 
-          <div className="hidden items-start gap-3 text-[0.9rem] leading-6 text-primary lg:flex">
-            <MapPin className="mt-1 size-4 shrink-0 stroke-[1.7] text-accent" />
+          <div className="hidden items-start gap-2.5 text-[0.88rem] leading-5 text-primary lg:flex">
+            <MapPin className="mt-0.5 size-4 shrink-0 stroke-[1.7] text-accent" />
             <div>
               <p>{siteSettings?.address || 'Адрес будет подтвержден и заполнен через CMS'}</p>
               <p className="text-muted-foreground">{siteSettings?.workingHours || 'По предварительной записи'}</p>
             </div>
           </div>
 
-          <div className="hidden items-start gap-3 text-[0.9rem] leading-6 text-primary lg:flex">
-            <Phone className="mt-1 size-4 shrink-0 stroke-[1.7] text-accent" />
+          <div className="hidden items-start gap-2.5 text-[0.88rem] leading-5 text-primary lg:flex">
+            <Phone className="mt-0.5 size-4 shrink-0 stroke-[1.7] text-accent" />
             <div>
               <p>{siteSettings?.phone || '+7 (000) 000-00-00'}</p>
               <p className="text-muted-foreground">{siteSettings?.email || 'email@example.com'}</p>
@@ -69,16 +69,20 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, siteSettings }
 
           <div className="flex justify-start lg:justify-end">
             {siteSettings?.primaryCTA?.link ? (
-              <CMSLink {...siteSettings.primaryCTA.link} className="gold-button inline-flex min-w-[15rem] justify-center" />
+              <CMSLink
+                {...siteSettings.primaryCTA.link}
+                appearance="inline"
+                className="gold-button inline-flex min-w-[14rem] justify-center no-underline"
+              />
             ) : (
-              <a className="gold-button inline-flex min-w-[15rem] justify-center" href="#consultation">
+              <a className="gold-button inline-flex min-w-[14rem] justify-center no-underline" href="#consultation">
                 Записаться на консультацию
               </a>
             )}
           </div>
         </div>
 
-        <div className="border-t border-border py-3">
+        <div className="border-t border-border py-2.5">
           <div className="flex items-center justify-between lg:hidden">
             <p className="text-[0.78rem] font-semibold uppercase tracking-[0.22em] text-accent">Навигация</p>
             <button
