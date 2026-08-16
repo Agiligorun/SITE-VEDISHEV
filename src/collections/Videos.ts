@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { slugField } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
@@ -64,6 +65,7 @@ export const Videos: CollectionConfig = {
       type: 'text',
       label: 'Внешняя ссылка',
     },
+    slugField(),
     ...legacyProvenanceFields(),
   ],
   versions: {

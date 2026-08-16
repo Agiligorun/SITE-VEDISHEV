@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { slugField } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
@@ -92,6 +93,7 @@ export const Books: CollectionConfig = {
       type: 'text',
       label: 'Ссылка на источник / каталог',
     },
+    slugField(),
     ...legacyProvenanceFields(),
   ],
   versions: {

@@ -710,6 +710,11 @@ export interface Book {
   description?: string | null;
   cover?: (number | null) | Media;
   url?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   sourceType?: ('legacy-site' | 'official-site' | 'library-catalog' | 'media' | 'editorial') | null;
   legacySourceUrl?: string | null;
   legacySlug?: string | null;
@@ -932,6 +937,11 @@ export interface Video {
   description?: string | null;
   cover?: (number | null) | Media;
   externalURL?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   sourceType?: ('legacy-site' | 'official-site' | 'library-catalog' | 'media' | 'editorial') | null;
   legacySourceUrl?: string | null;
   legacySlug?: string | null;
@@ -1827,6 +1837,8 @@ export interface BooksSelect<T extends boolean = true> {
   description?: T;
   cover?: T;
   url?: T;
+  generateSlug?: T;
+  slug?: T;
   sourceType?: T;
   legacySourceUrl?: T;
   legacySlug?: T;
@@ -1863,6 +1875,8 @@ export interface VideosSelect<T extends boolean = true> {
   description?: T;
   cover?: T;
   externalURL?: T;
+  generateSlug?: T;
+  slug?: T;
   sourceType?: T;
   legacySourceUrl?: T;
   legacySlug?: T;
