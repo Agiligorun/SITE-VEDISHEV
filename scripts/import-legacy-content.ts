@@ -43,6 +43,42 @@ const OFFICIAL_SOURCES = {
     'https://fparf.ru/news/fpa/v-preddverii-dnya-rossiyskoy-advokatury-vyshel-v-svet-sbornik-o-zashchite-prav-grazhdan-v-rossii/',
 }
 
+const CYRILLIC_TO_LATIN: Record<string, string> = {
+  а: 'a',
+  б: 'b',
+  в: 'v',
+  г: 'g',
+  д: 'd',
+  е: 'e',
+  ё: 'e',
+  ж: 'zh',
+  з: 'z',
+  и: 'i',
+  й: 'y',
+  к: 'k',
+  л: 'l',
+  м: 'm',
+  н: 'n',
+  о: 'o',
+  п: 'p',
+  р: 'r',
+  с: 's',
+  т: 't',
+  у: 'u',
+  ф: 'f',
+  х: 'kh',
+  ц: 'ts',
+  ч: 'ch',
+  ш: 'sh',
+  щ: 'shch',
+  ъ: '',
+  ы: 'y',
+  ь: '',
+  э: 'e',
+  ю: 'yu',
+  я: 'ya',
+}
+
 const PRACTICE_AREAS = [
   {
     slug: 'criminal-defense',
@@ -630,6 +666,24 @@ function syntheticDoc(collection: string, slug: string, data: Record<string, unk
   }
 }
 
+function toStableAsciiSlug(value: string) {
+  const transliterated = value
+    .toLowerCase()
+    .split('')
+    .map((char) => CYRILLIC_TO_LATIN[char] ?? char)
+    .join('')
+
+  const sanitized = transliterated
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
+  if (sanitized) {
+    return sanitized
+  }
+
+  return `item-${Buffer.from(value).toString('hex').slice(0, 12)}`
+}
+
 async function upsertBySlug(payload, collection, slug, data, options = {}) {
   const { dryRun = false, group = null, summary = null } = options
   const existing = await payload.find({
@@ -798,10 +852,7 @@ async function ensureCategories(payload, titles: string[], options = {}) {
   const idsByTitle = new Map<string, number>()
 
   for (const title of titles) {
-    const slug = title
-      .toLowerCase()
-      .replace(/[^a-zа-я0-9]+/gi, '-')
-      .replace(/^-+|-+$/g, '')
+    const slug = toStableAsciiSlug(title)
 
     const doc = await upsertBySlug(
       payload,
