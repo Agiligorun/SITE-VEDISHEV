@@ -344,6 +344,7 @@ async function main() {
             appearance: 'default',
           },
         },
+        secondaryLink: null,
         portraitPlaceholder:
           'Placeholder занимает ту же геометрию, что и будущая portrait-фотография в hero.',
       },
