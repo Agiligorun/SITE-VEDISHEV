@@ -12,11 +12,24 @@ export async function Footer() {
 
   const navItems = footerData?.navItems || []
   const legalLinks = siteSettings?.legalLinks || []
+  const contactItems = [
+    siteSettings?.address,
+    siteSettings?.phone,
+    siteSettings?.email,
+    siteSettings?.workingHours,
+  ].filter(Boolean)
+  const hasContacts = contactItems.length > 0
 
   return (
     <footer className="mt-auto bg-primary text-white">
       <div className="container py-14">
-        <div className="grid gap-8 border-b border-white/12 pb-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(0,1fr)]">
+        <div
+          className={`grid gap-8 border-b border-white/12 pb-10 ${
+            hasContacts
+              ? 'lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(0,1fr)]'
+              : 'lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.85fr)_minmax(0,1fr)]'
+          }`}
+        >
           <div className="lg:pr-8 lg:border-r lg:border-white/14">
             <Link className="inline-flex items-center" href="/">
               <Logo className="text-white [&_span:last-child]:text-white/65 [&_span:first-child]:text-white" />
@@ -36,17 +49,19 @@ export async function Footer() {
             </nav>
           </div>
 
-          <div className="lg:px-8 lg:border-r lg:border-white/14">
-            <p className="font-serif text-[2rem] leading-[1.08]">Контакты</p>
-            <div className="mt-5 space-y-3 text-[0.95rem] leading-7 text-white/78">
-              {siteSettings?.address ? <p>{siteSettings.address}</p> : null}
-              {siteSettings?.phone ? <p>{siteSettings.phone}</p> : null}
-              {siteSettings?.email ? <p>{siteSettings.email}</p> : null}
-              {siteSettings?.workingHours ? <p>{siteSettings.workingHours}</p> : null}
+          {hasContacts ? (
+            <div className="lg:px-8 lg:border-r lg:border-white/14">
+              <p className="font-serif text-[2rem] leading-[1.08]">Контакты</p>
+              <div className="mt-5 space-y-3 text-[0.95rem] leading-7 text-white/78">
+                {siteSettings?.address ? <p>{siteSettings.address}</p> : null}
+                {siteSettings?.phone ? <p>{siteSettings.phone}</p> : null}
+                {siteSettings?.email ? <p>{siteSettings.email}</p> : null}
+                {siteSettings?.workingHours ? <p>{siteSettings.workingHours}</p> : null}
+              </div>
             </div>
-          </div>
+          ) : null}
 
-          <div className="lg:pl-8">
+          <div className={hasContacts ? 'lg:pl-8' : ''}>
             <ConsultationForm
               buttonLabel="Отправить"
               description="Оставьте свой телефон, и мы свяжемся с вами для уточнения деталей."

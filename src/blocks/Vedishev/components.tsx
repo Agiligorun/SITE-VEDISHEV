@@ -125,12 +125,12 @@ const PracticeCard = ({ area, index }: { area: any; index: number }) => {
   const Icon = practiceIcons[index % practiceIcons.length]
 
   return (
-    <article className="border border-border bg-white p-5">
+    <article className="flex h-full flex-col border border-border bg-white p-5">
       <div className="flex h-10 w-10 items-center justify-center border border-accent/55 text-accent">
         <Icon className="size-[1.05rem] stroke-[1.6]" />
       </div>
       <h3 className="mt-5 font-serif text-[1.45rem] leading-[1.15] text-primary">{area.title}</h3>
-      <p className="mt-3 text-[0.92rem] leading-6 text-muted-foreground">{area.shortDescription}</p>
+      <p className="mt-3 flex-1 text-[0.92rem] leading-6 text-muted-foreground">{area.shortDescription}</p>
     </article>
   )
 }
@@ -371,7 +371,7 @@ export function PracticeGridBlock(props: any) {
       {description ? <p className="mb-6 max-w-[43rem] text-[0.95rem] leading-7 text-muted-foreground">{description}</p> : null}
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid auto-rows-fr gap-3 md:grid-cols-2 xl:grid-cols-4">
           {renderedAreas.map((area, index) => (
             <PracticeCard area={area} index={index} key={area.title} />
           ))}
@@ -425,9 +425,9 @@ export function ArticlesGridBlock(props: any) {
         </a>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-4">
         {articles?.map((article: any, index: number) => (
-          <article className="border border-border bg-white" key={article?.id || index}>
+          <article className="flex h-full flex-col border border-border bg-white" key={article?.id || index}>
             <div className="relative aspect-[4/3] overflow-hidden bg-[#ddd7cd]">
               {typeof article?.heroImage === 'object' && article.heroImage ? (
                 <Media
@@ -443,13 +443,13 @@ export function ArticlesGridBlock(props: any) {
                 </div>
               )}
             </div>
-            <div className="px-6 py-5">
+            <div className="flex flex-1 flex-col px-6 py-5">
               <p className="text-[0.83rem] text-muted-foreground">
                 {article?.publishedAt ? new Date(article.publishedAt).toLocaleDateString('ru-RU') : 'Материал'}
               </p>
               <h3 className="mt-3 font-serif text-[1.55rem] leading-[1.22] text-primary">{article?.title}</h3>
               {article?.excerpt || article?.meta?.description ? (
-                <p className="mt-3 text-[0.92rem] leading-6 text-muted-foreground">{article.excerpt || article.meta.description}</p>
+                <p className="mt-3 flex-1 text-[0.92rem] leading-6 text-muted-foreground">{article.excerpt || article.meta.description}</p>
               ) : null}
               {article?.slug ? (
                 <a className="mt-5 inline-flex items-center gap-2 text-[0.92rem] font-medium text-primary transition-opacity hover:opacity-70" href={`/posts/${article.slug}`}>
@@ -485,16 +485,16 @@ export function BooksShowcaseBlock(props: any) {
         </div>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3">
         {books?.map((book: any, index: number) => (
-          <article className="border border-border bg-white px-6 py-6" key={book?.id || index}>
+          <article className="flex h-full flex-col border border-border bg-white px-6 py-6" key={book?.id || index}>
             <div className="flex items-start justify-between gap-4">
               <p className="font-serif text-[1.55rem] leading-[1.12] text-primary">{book?.title}</p>
               {book?.year ? <span className="text-[0.82rem] font-medium text-primary/60">{book.year}</span> : null}
             </div>
             {book?.authors ? <p className="mt-3 text-[0.88rem] uppercase tracking-[0.16em] text-primary/55">{book.authors}</p> : null}
             {book?.publisher ? <p className="mt-3 text-[0.92rem] leading-6 text-muted-foreground">{book.publisher}</p> : null}
-            {book?.description ? <p className="mt-4 text-[0.92rem] leading-6 text-muted-foreground">{book.description}</p> : null}
+            {book?.description ? <p className="mt-4 flex-1 text-[0.92rem] leading-6 text-muted-foreground">{book.description}</p> : null}
             <div className="mt-5 flex flex-wrap gap-2 text-[0.8rem] text-primary/68">
               {book?.pageCount ? <span className="border border-border px-2 py-1">{book.pageCount} стр.</span> : null}
               {book?.fullTextStatus ? (
