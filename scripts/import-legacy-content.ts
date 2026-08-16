@@ -1198,8 +1198,16 @@ async function main() {
     bookDocs.push(doc)
   }
 
-  const featuredPublications = pickFeaturedDocuments(publicationDocs, 4, { preferVerified: true })
-  const featuredBooks = pickFeaturedDocuments(bookDocs, 6, { preferVerified: true, preferNonLegacy: true })
+  const featuredPublications = pickFeaturedDocuments(
+    publicationDocs.filter((item) => item?._status === 'published'),
+    4,
+    { preferVerified: true },
+  )
+  const featuredBooks = pickFeaturedDocuments(
+    bookDocs.filter((item) => item?._status === 'published'),
+    6,
+    { preferVerified: true, preferNonLegacy: true },
+  )
 
   const postDocs = []
 
