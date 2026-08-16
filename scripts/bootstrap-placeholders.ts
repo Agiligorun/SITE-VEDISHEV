@@ -344,7 +344,14 @@ async function main() {
             appearance: 'default',
           },
         },
-        secondaryLink: null,
+        secondaryLink: {
+          link: {
+            type: 'custom',
+            url: '#practice',
+            label: 'Все направления',
+            appearance: 'outline',
+          },
+        },
         portraitPlaceholder:
           'Placeholder занимает ту же геометрию, что и будущая portrait-фотография в hero.',
       },
