@@ -1464,15 +1464,16 @@ main()
     console.error(error)
     process.exitCode = 1
   })
-  .finally(async () => {
-    if (!payloadInstance?.destroy) {
-      return
+  .finally(() => {
+    if (payloadInstance?.destroy) {
+      void payloadInstance.destroy().catch((error) => {
+        console.error(error)
+        process.exitCode = 1
+      })
     }
 
-    try {
-      await payloadInstance.destroy()
-    } catch (error) {
-      console.error(error)
-      process.exitCode = 1
-    }
+    // This is a one-off migration utility, so terminate even if upstream libraries keep handles open.
+    setTimeout(() => {
+      process.exit(process.exitCode ?? 0)
+    }, 0)
   })
