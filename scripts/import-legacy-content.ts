@@ -690,6 +690,12 @@ function hasFeatureableTitle(value: unknown) {
   if (title.length < 6) return false
   if (!/[A-Za-zА-Яа-яЁё]/.test(title)) return false
   if (/^[\d\s./:-]+$/.test(title)) return false
+  if (/^(?:№|n[°o]?\.?\s*\d|с\.\s*\d|\/)/i.test(title)) return false
+  if (/\b\d+\s*с\.\b/i.test(title)) return false
+  if (/\bп\.л\.\b/i.test(title)) return false
+  if (/^[^A-Za-zА-Яа-яЁё]*[\d№/.-]/.test(title) && !/[A-Za-zА-Яа-яЁё].*\s+[A-Za-zА-Яа-яЁё]/.test(title)) {
+    return false
+  }
 
   return true
 }
