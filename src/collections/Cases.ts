@@ -3,6 +3,7 @@ import { slugField } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import { legacyProvenanceFields } from '@/fields/legacyProvenance'
 import { legalRichText } from '@/fields/legalRichText'
 import { seoFields } from '@/fields/seoFields'
 
@@ -20,6 +21,7 @@ export const Cases: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    defaultColumns: ['title', 'practiceArea', 'verified', 'updatedAt'],
   },
   fields: [
     {
@@ -41,22 +43,48 @@ export const Cases: CollectionConfig = {
       required: true,
     },
     {
+      type: 'row',
+      fields: [
+        {
+          name: 'caseCategory',
+          type: 'text',
+          label: 'Категория дела',
+        },
+        {
+          name: 'decisionDate',
+          type: 'date',
+          label: 'Дата судебного акта',
+        },
+      ],
+    },
+    {
       name: 'situation',
       type: 'richText',
       editor: legalRichText,
       label: 'Ситуация',
     },
     {
+      name: 'proceduralIssue',
+      type: 'textarea',
+      label: 'Процессуальная проблема',
+    },
+    {
       name: 'advocateWork',
       type: 'richText',
       editor: legalRichText,
-      label: 'Работа адвоката',
+      label: 'Позиция и работа защиты',
     },
     {
       name: 'result',
       type: 'richText',
       editor: legalRichText,
       label: 'Результат',
+    },
+    {
+      name: 'relatedPublication',
+      type: 'relationship',
+      relationTo: 'publications',
+      label: 'Связанная публикация',
     },
     {
       type: 'row',
@@ -79,6 +107,7 @@ export const Cases: CollectionConfig = {
       relationTo: 'media',
       label: 'Изображение',
     },
+    ...legacyProvenanceFields(),
     ...seoFields(),
     slugField(),
   ],

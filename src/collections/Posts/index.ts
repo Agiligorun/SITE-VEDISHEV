@@ -14,6 +14,7 @@ import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { Banner } from '../../blocks/Banner/config'
 import { Code } from '../../blocks/Code/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { legacyProvenanceFields } from '../../fields/legacyProvenance'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
 import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
@@ -129,6 +130,33 @@ export const Posts: CollectionConfig<'posts'> = {
               hasMany: true,
               relationTo: 'categories',
             },
+            {
+              name: 'practiceAreas',
+              type: 'relationship',
+              admin: {
+                position: 'sidebar',
+              },
+              hasMany: true,
+              relationTo: 'practice-areas',
+            },
+            {
+              name: 'excerpt',
+              type: 'textarea',
+              admin: {
+                position: 'sidebar',
+              },
+              label: 'Краткое описание',
+            },
+            {
+              name: 'authorName',
+              type: 'text',
+              admin: {
+                position: 'sidebar',
+              },
+              defaultValue: 'Николай Павлович Ведищев',
+              label: 'Имя автора для публикации',
+            },
+            ...legacyProvenanceFields(),
           ],
           label: 'Meta',
         },

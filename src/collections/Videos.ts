@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import { legacyProvenanceFields } from '@/fields/legacyProvenance'
 
 export const Videos: CollectionConfig = {
   slug: 'videos',
@@ -63,6 +64,7 @@ export const Videos: CollectionConfig = {
       type: 'text',
       label: 'Внешняя ссылка',
     },
+    ...legacyProvenanceFields(),
   ],
   versions: {
     drafts: true,

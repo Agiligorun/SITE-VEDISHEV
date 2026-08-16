@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import { legacyProvenanceFields } from '@/fields/legacyProvenance'
 
 export const Books: CollectionConfig = {
   slug: 'books',
@@ -17,6 +18,7 @@ export const Books: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    defaultColumns: ['title', 'year', 'verified', 'updatedAt'],
   },
   fields: [
     {
@@ -24,6 +26,12 @@ export const Books: CollectionConfig = {
       type: 'text',
       label: 'Название',
       required: true,
+    },
+    {
+      name: 'authors',
+      type: 'text',
+      label: 'Автор / авторы',
+      defaultValue: 'Н. П. Ведищев',
     },
     {
       type: 'row',
@@ -36,7 +44,35 @@ export const Books: CollectionConfig = {
         {
           name: 'publisher',
           type: 'text',
-          label: 'Издатель',
+          label: 'Издательство',
+        },
+        {
+          name: 'pageCount',
+          type: 'number',
+          label: 'Количество страниц',
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'isbn',
+          type: 'text',
+          label: 'ISBN',
+        },
+        {
+          name: 'fullTextStatus',
+          type: 'select',
+          label: 'Статус полного текста',
+          defaultValue: 'unknown',
+          options: [
+            { label: 'Неизвестно', value: 'unknown' },
+            { label: 'Полный текст недоступен', value: 'unavailable' },
+            { label: 'Есть каталог / карточка', value: 'catalog-only' },
+            { label: 'Полный текст доступен в читальном зале', value: 'reading-room' },
+            { label: 'Полный текст доступен онлайн', value: 'available-online' },
+          ],
         },
       ],
     },
@@ -54,8 +90,9 @@ export const Books: CollectionConfig = {
     {
       name: 'url',
       type: 'text',
-      label: 'Внешняя ссылка',
+      label: 'Ссылка на источник / каталог',
     },
+    ...legacyProvenanceFields(),
   ],
   versions: {
     drafts: true,

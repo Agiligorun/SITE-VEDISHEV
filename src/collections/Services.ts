@@ -3,6 +3,7 @@ import { slugField } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import { legacyProvenanceFields } from '@/fields/legacyProvenance'
 import { legalRichText } from '@/fields/legalRichText'
 import { seoFields } from '@/fields/seoFields'
 
@@ -70,6 +71,7 @@ export const Services: CollectionConfig = {
       ],
     },
     ...seoFields(),
+    ...legacyProvenanceFields(),
     slugField(),
   ],
   versions: {

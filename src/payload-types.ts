@@ -183,6 +183,7 @@ export interface Page {
     | AboutProfileBlock
     | PublicationsListBlock
     | ArticlesGridBlock
+    | BooksShowcaseBlock
     | FAQBlock
     | ConsultationCtaBlock
     | ContactsBlock
@@ -283,6 +284,15 @@ export interface Post {
   };
   relatedPosts?: (number | Post)[] | null;
   categories?: (number | Category)[] | null;
+  practiceAreas?: (number | PracticeArea)[] | null;
+  excerpt?: string | null;
+  authorName?: string | null;
+  sourceType?: ('legacy-site' | 'official-site' | 'library-catalog' | 'media' | 'editorial') | null;
+  legacySourceUrl?: string | null;
+  legacySlug?: string | null;
+  legacyPublishedAt?: string | null;
+  verified?: boolean | null;
+  verificationNote?: string | null;
   meta?: {
     title?: string | null;
     /**
@@ -453,6 +463,52 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "practice-areas".
+ */
+export interface PracticeArea {
+  id: number;
+  title: string;
+  shortDescription: string;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  iconLabel?: string | null;
+  order?: number | null;
+  showOnHome?: boolean | null;
+  meta?: {
+    title?: string | null;
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  sourceType?: ('legacy-site' | 'official-site' | 'library-catalog' | 'media' | 'editorial') | null;
+  legacySourceUrl?: string | null;
+  legacySlug?: string | null;
+  legacyPublishedAt?: string | null;
+  verified?: boolean | null;
+  verificationNote?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -507,46 +563,6 @@ export interface PracticeGridBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'practiceGrid';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "practice-areas".
- */
-export interface PracticeArea {
-  id: number;
-  title: string;
-  shortDescription: string;
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  iconLabel?: string | null;
-  order?: number | null;
-  showOnHome?: boolean | null;
-  meta?: {
-    title?: string | null;
-    image?: (number | null) | Media;
-    description?: string | null;
-  };
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -624,11 +640,20 @@ export interface Publication {
   id: number;
   title: string;
   source: string;
+  authors?: string | null;
+  type: 'academic' | 'professional' | 'media' | 'interview' | 'commentary' | 'conference' | 'other';
   publishedAt?: string | null;
-  type: 'media' | 'academic' | 'interview' | 'other';
+  issue?: string | null;
+  pageRange?: string | null;
   url?: string | null;
   image?: (number | null) | Media;
   description?: string | null;
+  sourceType?: ('legacy-site' | 'official-site' | 'library-catalog' | 'media' | 'editorial') | null;
+  legacySourceUrl?: string | null;
+  legacySlug?: string | null;
+  legacyPublishedAt?: string | null;
+  verified?: boolean | null;
+  verificationNote?: string | null;
   meta?: {
     title?: string | null;
     image?: (number | null) | Media;
@@ -655,6 +680,45 @@ export interface ArticlesGridBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'articlesGrid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BooksShowcaseBlock".
+ */
+export interface BooksShowcaseBlock {
+  eyebrow?: string | null;
+  heading: string;
+  description?: string | null;
+  books: (number | Book)[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'booksShowcase';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "books".
+ */
+export interface Book {
+  id: number;
+  title: string;
+  authors?: string | null;
+  year?: number | null;
+  publisher?: string | null;
+  pageCount?: number | null;
+  isbn?: string | null;
+  fullTextStatus?: ('unknown' | 'unavailable' | 'catalog-only' | 'reading-room' | 'available-online') | null;
+  description?: string | null;
+  cover?: (number | null) | Media;
+  url?: string | null;
+  sourceType?: ('legacy-site' | 'official-site' | 'library-catalog' | 'media' | 'editorial') | null;
+  legacySourceUrl?: string | null;
+  legacySlug?: string | null;
+  legacyPublishedAt?: string | null;
+  verified?: boolean | null;
+  verificationNote?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -744,6 +808,12 @@ export interface Service {
     image?: (number | null) | Media;
     description?: string | null;
   };
+  sourceType?: ('legacy-site' | 'official-site' | 'library-catalog' | 'media' | 'editorial') | null;
+  legacySourceUrl?: string | null;
+  legacySlug?: string | null;
+  legacyPublishedAt?: string | null;
+  verified?: boolean | null;
+  verificationNote?: string | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -762,6 +832,8 @@ export interface Case {
   title: string;
   practiceArea?: (number | null) | PracticeArea;
   shortDescription: string;
+  caseCategory?: string | null;
+  decisionDate?: string | null;
   situation?: {
     root: {
       type: string;
@@ -777,6 +849,7 @@ export interface Case {
     };
     [k: string]: unknown;
   } | null;
+  proceduralIssue?: string | null;
   advocateWork?: {
     root: {
       type: string;
@@ -807,9 +880,16 @@ export interface Case {
     };
     [k: string]: unknown;
   } | null;
+  relatedPublication?: (number | null) | Publication;
   year?: number | null;
   showOnHome?: boolean | null;
   image?: (number | null) | Media;
+  sourceType?: ('legacy-site' | 'official-site' | 'library-catalog' | 'media' | 'editorial') | null;
+  legacySourceUrl?: string | null;
+  legacySlug?: string | null;
+  legacyPublishedAt?: string | null;
+  verified?: boolean | null;
+  verificationNote?: string | null;
   meta?: {
     title?: string | null;
     image?: (number | null) | Media;
@@ -820,22 +900,6 @@ export interface Case {
    */
   generateSlug?: boolean | null;
   slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "books".
- */
-export interface Book {
-  id: number;
-  title: string;
-  year?: number | null;
-  publisher?: string | null;
-  description?: string | null;
-  cover?: (number | null) | Media;
-  url?: string | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -868,6 +932,12 @@ export interface Video {
   description?: string | null;
   cover?: (number | null) | Media;
   externalURL?: string | null;
+  sourceType?: ('legacy-site' | 'official-site' | 'library-catalog' | 'media' | 'editorial') | null;
+  legacySourceUrl?: string | null;
+  legacySlug?: string | null;
+  legacyPublishedAt?: string | null;
+  verified?: boolean | null;
+  verificationNote?: string | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1372,6 +1442,7 @@ export interface PagesSelect<T extends boolean = true> {
         aboutProfile?: T | AboutProfileBlockSelect<T>;
         publicationsList?: T | PublicationsListBlockSelect<T>;
         articlesGrid?: T | ArticlesGridBlockSelect<T>;
+        booksShowcase?: T | BooksShowcaseBlockSelect<T>;
         faqBlock?: T | FAQBlockSelect<T>;
         consultationCta?: T | ConsultationCtaBlockSelect<T>;
         contactsBlock?: T | ContactsBlockSelect<T>;
@@ -1518,6 +1589,18 @@ export interface ArticlesGridBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BooksShowcaseBlock_select".
+ */
+export interface BooksShowcaseBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  heading?: T;
+  description?: T;
+  books?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "FAQBlock_select".
  */
 export interface FAQBlockSelect<T extends boolean = true> {
@@ -1567,6 +1650,15 @@ export interface PostsSelect<T extends boolean = true> {
   content?: T;
   relatedPosts?: T;
   categories?: T;
+  practiceAreas?: T;
+  excerpt?: T;
+  authorName?: T;
+  sourceType?: T;
+  legacySourceUrl?: T;
+  legacySlug?: T;
+  legacyPublishedAt?: T;
+  verified?: T;
+  verificationNote?: T;
   meta?:
     | T
     | {
@@ -1606,6 +1698,12 @@ export interface PracticeAreasSelect<T extends boolean = true> {
         image?: T;
         description?: T;
       };
+  sourceType?: T;
+  legacySourceUrl?: T;
+  legacySlug?: T;
+  legacyPublishedAt?: T;
+  verified?: T;
+  verificationNote?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
@@ -1631,6 +1729,12 @@ export interface ServicesSelect<T extends boolean = true> {
         image?: T;
         description?: T;
       };
+  sourceType?: T;
+  legacySourceUrl?: T;
+  legacySlug?: T;
+  legacyPublishedAt?: T;
+  verified?: T;
+  verificationNote?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
@@ -1645,12 +1749,22 @@ export interface CasesSelect<T extends boolean = true> {
   title?: T;
   practiceArea?: T;
   shortDescription?: T;
+  caseCategory?: T;
+  decisionDate?: T;
   situation?: T;
+  proceduralIssue?: T;
   advocateWork?: T;
   result?: T;
+  relatedPublication?: T;
   year?: T;
   showOnHome?: T;
   image?: T;
+  sourceType?: T;
+  legacySourceUrl?: T;
+  legacySlug?: T;
+  legacyPublishedAt?: T;
+  verified?: T;
+  verificationNote?: T;
   meta?:
     | T
     | {
@@ -1671,11 +1785,20 @@ export interface CasesSelect<T extends boolean = true> {
 export interface PublicationsSelect<T extends boolean = true> {
   title?: T;
   source?: T;
-  publishedAt?: T;
+  authors?: T;
   type?: T;
+  publishedAt?: T;
+  issue?: T;
+  pageRange?: T;
   url?: T;
   image?: T;
   description?: T;
+  sourceType?: T;
+  legacySourceUrl?: T;
+  legacySlug?: T;
+  legacyPublishedAt?: T;
+  verified?: T;
+  verificationNote?: T;
   meta?:
     | T
     | {
@@ -1695,11 +1818,21 @@ export interface PublicationsSelect<T extends boolean = true> {
  */
 export interface BooksSelect<T extends boolean = true> {
   title?: T;
+  authors?: T;
   year?: T;
   publisher?: T;
+  pageCount?: T;
+  isbn?: T;
+  fullTextStatus?: T;
   description?: T;
   cover?: T;
   url?: T;
+  sourceType?: T;
+  legacySourceUrl?: T;
+  legacySlug?: T;
+  legacyPublishedAt?: T;
+  verified?: T;
+  verificationNote?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1730,6 +1863,12 @@ export interface VideosSelect<T extends boolean = true> {
   description?: T;
   cover?: T;
   externalURL?: T;
+  sourceType?: T;
+  legacySourceUrl?: T;
+  legacySlug?: T;
+  legacyPublishedAt?: T;
+  verified?: T;
+  verificationNote?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

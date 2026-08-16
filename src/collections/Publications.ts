@@ -3,6 +3,7 @@ import { slugField } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import { legacyProvenanceFields } from '@/fields/legacyProvenance'
 import { seoFields } from '@/fields/seoFields'
 
 export const Publications: CollectionConfig = {
@@ -19,6 +20,7 @@ export const Publications: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    defaultColumns: ['title', 'type', 'source', 'verified', 'updatedAt'],
   },
   fields: [
     {
@@ -28,31 +30,60 @@ export const Publications: CollectionConfig = {
       required: true,
     },
     {
-      name: 'source',
-      type: 'text',
-      label: 'Источник',
-      required: true,
+      type: 'row',
+      fields: [
+        {
+          name: 'source',
+          type: 'text',
+          label: 'Источник / журнал',
+          required: true,
+        },
+        {
+          name: 'authors',
+          type: 'text',
+          label: 'Автор / авторы',
+          defaultValue: 'Н. П. Ведищев',
+        },
+      ],
     },
     {
       type: 'row',
       fields: [
         {
-          name: 'publishedAt',
-          type: 'date',
-          label: 'Дата публикации',
-        },
-        {
           name: 'type',
           type: 'select',
           label: 'Тип',
           required: true,
-          defaultValue: 'media',
+          defaultValue: 'professional',
           options: [
+            { label: 'Научная статья', value: 'academic' },
+            { label: 'Профессиональная статья', value: 'professional' },
             { label: 'СМИ', value: 'media' },
-            { label: 'Научная', value: 'academic' },
             { label: 'Интервью', value: 'interview' },
+            { label: 'Комментарий', value: 'commentary' },
+            { label: 'Конференция', value: 'conference' },
             { label: 'Другое', value: 'other' },
           ],
+        },
+        {
+          name: 'publishedAt',
+          type: 'date',
+          label: 'Дата публикации',
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'issue',
+          type: 'text',
+          label: 'Номер / выпуск',
+        },
+        {
+          name: 'pageRange',
+          type: 'text',
+          label: 'Страницы',
         },
       ],
     },
@@ -70,8 +101,9 @@ export const Publications: CollectionConfig = {
     {
       name: 'description',
       type: 'textarea',
-      label: 'Описание',
+      label: 'Краткая аннотация',
     },
+    ...legacyProvenanceFields(),
     ...seoFields(),
     slugField(),
   ],

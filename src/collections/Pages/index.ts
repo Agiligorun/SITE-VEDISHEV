@@ -6,6 +6,7 @@ import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import {
   AboutProfileBlock,
   ArticlesGridBlock,
+  BooksShowcaseBlock,
   ConsultationCtaBlock,
   ContactsBlock,
   FAQBlock,
@@ -69,6 +70,7 @@ export const Pages: CollectionConfig<'pages'> = {
         AboutProfileBlock,
         PublicationsListBlock,
         ArticlesGridBlock,
+        BooksShowcaseBlock,
         FAQBlock,
         ConsultationCtaBlock,
         ContactsBlock,

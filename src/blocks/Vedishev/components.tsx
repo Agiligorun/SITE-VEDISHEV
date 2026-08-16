@@ -239,6 +239,18 @@ function AboutColumn({
               enableProse={false}
             />
           ) : null}
+          {block.highlights?.length ? (
+            <div className="mt-6 grid gap-3 md:grid-cols-2">
+              {block.highlights.map((item: any, index: number) => (
+                <div className="border border-border/80 bg-[#f6f1ea] px-4 py-4" key={item?.title || index}>
+                  <p className="font-serif text-[1.05rem] leading-[1.15] text-primary">{item?.title}</p>
+                  {item?.description ? (
+                    <p className="mt-2 text-[0.88rem] leading-6 text-muted-foreground">{item.description}</p>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          ) : null}
           {block.profileLink?.link ? (
             <CMSLink
               {...block.profileLink.link}
@@ -277,6 +289,9 @@ function PublicationsColumn({ block }: { block: any }) {
             <div className="flex items-center text-[1.1rem] font-medium text-primary/72">{publication?.source}</div>
             <div>
               <h3 className="font-serif text-[1.28rem] leading-[1.25] text-primary">{publication?.title}</h3>
+              {publication?.description ? (
+                <p className="mt-2 text-[0.9rem] leading-6 text-muted-foreground">{publication.description}</p>
+              ) : null}
               {publication?.publishedAt ? (
                 <p className="mt-2 text-[0.86rem] text-muted-foreground">
                   {new Date(publication.publishedAt).toLocaleDateString('ru-RU')}
@@ -489,8 +504,8 @@ export function ArticlesGridBlock(props: any) {
                 {article?.publishedAt ? new Date(article.publishedAt).toLocaleDateString('ru-RU') : 'Материал'}
               </p>
               <h3 className="mt-3 font-serif text-[1.55rem] leading-[1.22] text-primary">{article?.title}</h3>
-              {article?.meta?.description ? (
-                <p className="mt-3 text-[0.92rem] leading-6 text-muted-foreground">{article.meta.description}</p>
+              {article?.excerpt || article?.meta?.description ? (
+                <p className="mt-3 text-[0.92rem] leading-6 text-muted-foreground">{article.excerpt || article.meta.description}</p>
               ) : null}
               {article?.slug ? (
                 <a className="mt-5 inline-flex items-center gap-2 text-[0.92rem] font-medium text-primary transition-opacity hover:opacity-70" href={`/posts/${article.slug}`}>
@@ -499,6 +514,57 @@ export function ArticlesGridBlock(props: any) {
                 </a>
               ) : null}
             </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+export function BooksShowcaseBlock(props: any) {
+  const { eyebrow, heading, description, books } = props
+  const fullTextLabels: Record<string, string> = {
+    'available-online': 'полный текст онлайн',
+    'catalog-only': 'есть каталог',
+    'reading-room': 'доступно в читальном зале',
+    unavailable: 'без полного текста',
+    unknown: 'статус текста уточняется',
+  }
+
+  return (
+    <section className="container py-10" id="books">
+      <div className="mb-6 flex items-end justify-between gap-6">
+        <div className="max-w-[46rem]">
+          {eyebrow ? <p className="section-kicker">{eyebrow}</p> : null}
+          {heading ? <h2 className="section-heading text-primary">{heading}</h2> : null}
+          {description ? <p className="mt-3 text-[0.95rem] leading-7 text-muted-foreground">{description}</p> : null}
+        </div>
+      </div>
+
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {books?.map((book: any, index: number) => (
+          <article className="border border-border bg-white px-6 py-6" key={book?.id || index}>
+            <div className="flex items-start justify-between gap-4">
+              <p className="font-serif text-[1.55rem] leading-[1.12] text-primary">{book?.title}</p>
+              {book?.year ? <span className="text-[0.82rem] font-medium text-primary/60">{book.year}</span> : null}
+            </div>
+            {book?.authors ? <p className="mt-3 text-[0.88rem] uppercase tracking-[0.16em] text-primary/55">{book.authors}</p> : null}
+            {book?.publisher ? <p className="mt-3 text-[0.92rem] leading-6 text-muted-foreground">{book.publisher}</p> : null}
+            {book?.description ? <p className="mt-4 text-[0.92rem] leading-6 text-muted-foreground">{book.description}</p> : null}
+            <div className="mt-5 flex flex-wrap gap-2 text-[0.8rem] text-primary/68">
+              {book?.pageCount ? <span className="border border-border px-2 py-1">{book.pageCount} стр.</span> : null}
+              {book?.fullTextStatus ? (
+                <span className="border border-border px-2 py-1">
+                  {fullTextLabels[String(book.fullTextStatus)] || 'статус уточняется'}
+                </span>
+              ) : null}
+            </div>
+            {book?.url ? (
+              <a className="mt-5 inline-flex items-center gap-2 text-[0.92rem] font-medium text-primary transition-opacity hover:opacity-70" href={book.url} rel="noreferrer" target="_blank">
+                Открыть источник
+                <ArrowRight className="size-4 stroke-[1.7]" />
+              </a>
+            ) : null}
           </article>
         ))}
       </div>

@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 
 import {
   AboutProfileBlock,
+  BooksShowcaseBlock,
   HomeAboutPublicationsZone,
   ArticlesGridBlock,
   ConsultationCtaBlock,
@@ -16,6 +17,7 @@ import {
 const blockComponents = {
   aboutProfile: AboutProfileBlock,
   articlesGrid: ArticlesGridBlock,
+  booksShowcase: BooksShowcaseBlock,
   consultationCta: ConsultationCtaBlock,
   contactsBlock: ContactsBlock,
   faqBlock: FAQBlock,

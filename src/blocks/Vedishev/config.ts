@@ -194,6 +194,26 @@ export const ArticlesGridBlock: Block = {
   ],
 }
 
+export const BooksShowcaseBlock: Block = {
+  slug: 'booksShowcase',
+  interfaceName: 'BooksShowcaseBlock',
+  labels: {
+    singular: 'Книги',
+    plural: 'Книги',
+  },
+  fields: [
+    ...introFields,
+    {
+      name: 'books',
+      type: 'relationship',
+      relationTo: 'books',
+      hasMany: true,
+      label: 'Книги и монографии',
+      required: true,
+    },
+  ],
+}
+
 export const FAQBlock: Block = {
   slug: 'faqBlock',
   interfaceName: 'FAQBlock',
