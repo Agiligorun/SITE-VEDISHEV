@@ -6,6 +6,8 @@ import configPromise from '@payload-config'
 import { JSDOM } from 'jsdom'
 import { getPayload, type File } from 'payload'
 
+let payloadInstance: Awaited<ReturnType<typeof getPayload>> | null = null
+
 const curlBin = process.platform === 'win32' ? 'curl.exe' : 'curl'
 
 const LEGACY_URLS = {
@@ -875,6 +877,7 @@ async function main() {
   const { dryRun, reportPath } = parseArgs()
   const summary = createOperationSummary()
   const payload = await getPayload({ config: configPromise })
+  payloadInstance = payload
 
   const heroPortrait = await ensureMedia(
     payload,
@@ -1456,7 +1459,20 @@ async function main() {
   )
 }
 
-main().catch((error) => {
-  console.error(error)
-  process.exit(1)
-})
+main()
+  .catch((error) => {
+    console.error(error)
+    process.exitCode = 1
+  })
+  .finally(async () => {
+    if (!payloadInstance?.destroy) {
+      return
+    }
+
+    try {
+      await payloadInstance.destroy()
+    } catch (error) {
+      console.error(error)
+      process.exitCode = 1
+    }
+  })
