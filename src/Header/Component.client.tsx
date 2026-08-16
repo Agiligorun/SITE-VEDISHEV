@@ -23,6 +23,8 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, siteSettings }
   const [theme, setTheme] = useState<string | null>(null)
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
   const pathname = usePathname()
+  const hasAddressBlock = Boolean(siteSettings?.address || siteSettings?.workingHours)
+  const hasContactBlock = Boolean(siteSettings?.phone || siteSettings?.email)
 
   useEffect(() => {
     setHeaderTheme(null)
@@ -51,21 +53,25 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data, siteSettings }
             <p className="text-muted-foreground">{siteSettings?.professionalStatus || 'Адвокат'}</p>
           </div>
 
-          <div className="hidden items-start gap-2.5 text-[0.88rem] leading-5 text-primary lg:flex">
-            <MapPin className="mt-0.5 size-4 shrink-0 stroke-[1.7] text-accent" />
-            <div>
-              <p>{siteSettings?.address || 'Адрес будет подтвержден и заполнен через CMS'}</p>
-              <p className="text-muted-foreground">{siteSettings?.workingHours || 'По предварительной записи'}</p>
+          {hasAddressBlock ? (
+            <div className="hidden items-start gap-2.5 text-[0.88rem] leading-5 text-primary lg:flex">
+              <MapPin className="mt-0.5 size-4 shrink-0 stroke-[1.7] text-accent" />
+              <div>
+                {siteSettings?.address ? <p>{siteSettings.address}</p> : null}
+                {siteSettings?.workingHours ? <p className="text-muted-foreground">{siteSettings.workingHours}</p> : null}
+              </div>
             </div>
-          </div>
+          ) : null}
 
-          <div className="hidden items-start gap-2.5 text-[0.88rem] leading-5 text-primary lg:flex">
-            <Phone className="mt-0.5 size-4 shrink-0 stroke-[1.7] text-accent" />
-            <div>
-              <p>{siteSettings?.phone || '+7 (000) 000-00-00'}</p>
-              <p className="text-muted-foreground">{siteSettings?.email || 'email@example.com'}</p>
+          {hasContactBlock ? (
+            <div className="hidden items-start gap-2.5 text-[0.88rem] leading-5 text-primary lg:flex">
+              <Phone className="mt-0.5 size-4 shrink-0 stroke-[1.7] text-accent" />
+              <div>
+                {siteSettings?.phone ? <p>{siteSettings.phone}</p> : null}
+                {siteSettings?.email ? <p className="text-muted-foreground">{siteSettings.email}</p> : null}
+              </div>
             </div>
-          </div>
+          ) : null}
 
           <div className="flex justify-start lg:justify-end">
             {siteSettings?.primaryCTA?.link ? (

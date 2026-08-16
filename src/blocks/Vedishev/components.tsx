@@ -42,56 +42,6 @@ const practiceIcons = [
 
 const trustIcons = [Handshake, ShieldCheck, Scale]
 
-const practiceFallbacks = [
-  {
-    title: 'Уголовные дела',
-    shortDescription: 'Защита на всех стадиях уголовного процесса по делам любой сложности.',
-  },
-  {
-    title: 'Гражданские дела',
-    shortDescription: 'Представительство в судах по гражданским спорам и конфликтам.',
-  },
-  {
-    title: 'Арбитражные споры',
-    shortDescription: 'Защита интересов бизнеса в арбитражных судах и переговорах.',
-  },
-  {
-    title: 'Семейные споры',
-    shortDescription: 'Деликатное сопровождение в семейных конфликтах и переговорах.',
-  },
-  {
-    title: 'Наследственные дела',
-    shortDescription: 'Оформление наследства, споры о наследовании и восстановление сроков.',
-  },
-  {
-    title: 'Жилищные споры',
-    shortDescription: 'Споры о праве пользования, вселении, выселении и признании права собственности.',
-  },
-  {
-    title: 'Административные дела',
-    shortDescription: 'Обжалование действий органов власти и должностных лиц.',
-  },
-  {
-    title: 'Международные дела',
-    shortDescription: 'Правовая помощь в делах с иностранным элементом и трансграничными рисками.',
-  },
-]
-
-const trustFallbacks = [
-  {
-    title: 'Опыт',
-    description: 'Более 20 лет успешной адвокатской практики',
-  },
-  {
-    title: 'Индивидуальный подход',
-    description: 'Решения, основанные на анализе вашей ситуации',
-  },
-  {
-    title: 'Конфиденциальность',
-    description: 'Гарантия полной конфиденциальности',
-  },
-]
-
 const sectionTitle = (eyebrow?: string | null, heading?: string | null, description?: string | null) => (
   <div className="mb-6 flex items-end justify-between gap-6">
     <div className="max-w-[46rem]">
@@ -127,25 +77,21 @@ const renderHeroHeading = (heading?: string | null) => {
 }
 
 const buildPracticeItems = (areas: any[] = []) =>
-  practiceFallbacks.map((fallback, index) => {
-    const area = areas[index]
-
-    return {
-      iconLabel: area?.iconLabel || fallback.title.slice(0, 2).toUpperCase(),
-      shortDescription: area?.shortDescription || fallback.shortDescription,
-      title: area?.title || fallback.title,
-    }
-  })
+  areas
+    .filter((area) => area?.title && area?.shortDescription)
+    .map((area) => ({
+      iconLabel: area?.iconLabel || String(area.title).slice(0, 2).toUpperCase(),
+      shortDescription: area.shortDescription,
+      title: area.title,
+    }))
 
 const buildTrustItems = (items: any[] = []) =>
-  trustFallbacks.map((fallback, index) => {
-    const item = items[index]
-
-    return {
-      description: item?.description || fallback.description,
-      title: item?.title || fallback.title,
-    }
-  })
+  items
+    .filter((item) => item?.title && item?.description)
+    .map((item) => ({
+      description: item.description,
+      title: item.title,
+    }))
 
 const PlaceholderPhoto = ({
   dark = false,
@@ -225,9 +171,7 @@ function AboutColumn({
           <p className="font-serif text-[2rem] leading-[1.08] text-primary">
             {siteSettings?.fullName || 'Николай Павлович Ведищев'}
           </p>
-          <p className="mt-2 text-[0.95rem] text-primary/72">
-            {siteSettings?.professionalStatus || 'Адвокат, регистрационный номер будет добавлен через CMS'}
-          </p>
+          {siteSettings?.professionalStatus ? <p className="mt-2 text-[0.95rem] text-primary/72">{siteSettings.professionalStatus}</p> : null}
           {block.description ? (
             <p className="mt-6 text-[0.95rem] leading-7 text-muted-foreground">{block.description}</p>
           ) : null}
